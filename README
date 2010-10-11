@@ -1,0 +1,9 @@
+This project covers the work needed to completely rewrite the shared module system for our existing Mozmill tests for Firefox.
+
+The original Mozmill tests repository can be found at:
+http://hg.mozilla.org/qa/mozmill-tests/
+
+Project leads:
+==============
+Geo Mealer <gmealer@mozilla.com>
+Henrik Skupin <hskupin@mozilla.com>
