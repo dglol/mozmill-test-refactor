@@ -6,12 +6,12 @@ var NavBar = exports.NavBar = inheritance.Class.extend(widgets.Element, {
     this.parent(parentNode, "#nav-bar");
   },
 
-  homeButton : function() {
+  get homeButton() {
     this._homeButton = this._homeButton || new widgets.Button(this.document, "#home-button");
     return this._homeButton;
   },
 
-  locationbar : function() {
+  get locationbar() {
     this._locationbar = this._locationbar || new LocationBar(this.document);
     return this._locationbar;
   }

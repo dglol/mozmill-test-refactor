@@ -19,7 +19,7 @@ var Browser = exports.Browser = inheritance.Class.extend(widgets.Element, {
     this.parent(this.document, "#main-window");
   },
 
-  navbar : function() {
+  get navbar() {
     this._navbar = this._navbar || new navbar.NavBar(this.document);
     return this._navbar;
   },

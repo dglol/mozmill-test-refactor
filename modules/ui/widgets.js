@@ -52,17 +52,17 @@ var Element = exports.Element = inheritance.Class.extend({
     this.controller = new mozmill.controller.MozMillController(this.window);
   },
 
-  element : function() {
-    return new elementslib.Elem(this.node());
+  get element() {
+    return new elementslib.Elem(this.node);
   },
 
-  node : function() {
+  get node() {
     this.collector.queryNodes(this.selector);
     return this.collector.nodes[0];
   },
 
   click : function() {
-    this.controller.click(this.element());
+    this.controller.click(this.element);
   }
 });
 
@@ -72,7 +72,7 @@ var Control = exports.Control = inheritance.Class.extend(Element, {
   },
 
   keypress : function(aKey, aModifiers) {
-    this.controller.keypress(this.element(), aKey, aModifiers);
+    this.controller.keypress(this.element, aKey, aModifiers);
   }
 });
 
@@ -88,6 +88,6 @@ var Textbox = exports.Textbox = inheritance.Class.extend(Control, {
   },
 
   type : function(aText) {
-    this.controller.type(this.element(), aText);
+    this.controller.type(this.element, aText);
   }
 });

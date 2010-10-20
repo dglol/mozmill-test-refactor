@@ -61,6 +61,10 @@ var Class = (function() {
         for (var prop in src) {
           if (dest[prop] && typeof(src[prop]) == 'function') {
             Class.inherit(dest, src, prop);
+          } else if (src.__lookupGetter__(prop)) {
+            dest.__defineGetter__(prop, src.__lookupGetter__(prop));
+          } else if (src.__lookupSetter__(prop)) {
+            dest.__defineSetter__(prop, src.__lookupSetter__(prop));
           } else {
             dest[prop] = src[prop];
           }
