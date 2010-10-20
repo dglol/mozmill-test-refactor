@@ -5,8 +5,8 @@ function setupModule() {
 }
 
 function testElements() {
-  browser.navbar.homeButton.click();
-  browser.navbar.locationbar.open("https://addons.mozilla.org");
+  browser.navbar.home.click();
+  browser.openURL("https://addons.mozilla.org");
   browser.waitForPageLoad();
 
   browser.navbar.locationbar.type("http://www.google.de");

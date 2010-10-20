@@ -6,9 +6,9 @@ var NavBar = exports.NavBar = inheritance.Class.extend(widgets.Element, {
     this.parent(parentNode, "#nav-bar");
   },
 
-  get homeButton() {
-    this._homeButton = this._homeButton || new widgets.Button(this.document, "#home-button");
-    return this._homeButton;
+  get home() {
+    this._home = this._home || new widgets.Button(this.document, "#home-button");
+    return this._home;
   },
 
   get locationbar() {
@@ -21,11 +21,6 @@ var NavBar = exports.NavBar = inheritance.Class.extend(widgets.Element, {
 var LocationBar = exports.LocationBar = inheritance.Class.extend(widgets.Textbox, {
   initialize : function(parentNode) {
     this.parent(parentNode, "#urlbar");
-  },
-
-  open : function(aURL) {
-    this.type(aURL);
-    this.keypress("VK_RETURN", {});
   }
 });
 

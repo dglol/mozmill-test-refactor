@@ -24,6 +24,11 @@ var Browser = exports.Browser = inheritance.Class.extend(widgets.Element, {
     return this._navbar;
   },
 
+  openURL : function(aURL) {
+    this.navbar.locationbar.type(aURL);
+    this.navbar.locationbar.keypress("VK_RETURN", {});
+  },
+
   // temporarily - should be part of the tabs module.
   waitForPageLoad : function(aTimeout) {
     this.controller.waitForPageLoad(aTimeout);
