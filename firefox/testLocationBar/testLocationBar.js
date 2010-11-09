@@ -7,7 +7,6 @@ function setupModule() {
 function testElements() {
   browser.navbar.home.click();
   browser.openURL("https://addons.mozilla.org");
-  browser.waitForPageLoad();
 
   browser.navbar.locationbar.type("http://www.google.de");
   browser.navbar.locationbar.keypress("VK_RETURN", {});
