@@ -1,10 +1,7 @@
-var Browser = require("../../modules/ui/browser");
 var Services = require("../../modules/services");
 
 function setupModule(module) {
-  browser = Browser.get();
-
-  assert = require("../../modules/assert");
+  require("../../modules/init").head(module);
 }
 
 function testElements() {
