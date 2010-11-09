@@ -1,18 +1,24 @@
-var inheritance = require("../external/inheritance");
-var navbar = require("navbar");
+var Inheritance = require("../external/inheritance");
+var Navbar = require("navbar");
 
 // Needed if we have special widgets
-var widgets = exports.widgets = require("widgets");
+var Widgets = exports.Widgets = require("widgets");
 
 var wm = Cc["@mozilla.org/appshell/window-mediator;1"]
          .getService(Ci.nsIWindowMediator);
 
-var init = exports.init = function init(aWindow) {
+/**
+ * Get an instance of the browser window
+ */
+var get = exports.get = function get(aWindow) {
   return new Browser(aWindow);
 }
 
-var Browser = exports.Browser = inheritance.Class.extend(widgets.Element, {
-  initialize : function(aWindow) {
+/**
+ * UI class to handle the browser window
+ */
+var Browser = exports.Browser = Inheritance.Class.extend(Widgets.Element, {
+  initialize : function Browser_initialize(aWindow) {
     this.window = aWindow || wm.getMostRecentWindow("navigator:browser");
     this.document = this.window.document;
 
@@ -20,18 +26,18 @@ var Browser = exports.Browser = inheritance.Class.extend(widgets.Element, {
   },
 
   get navbar() {
-    this._navbar = this._navbar || new navbar.NavBar(this.document);
+    this._navbar = this._navbar || new Navbar.NavBar(this.document);
     return this._navbar;
   },
 
   // temporarily - should be part of the tabs module.
-  openURL : function(aURL) {
+  loadURL : function Browser_loadURL(aURL) {
     this.navbar.locationbar.type(aURL);
     this.navbar.locationbar.keypress("VK_RETURN", {});
     this.controller.waitForPageLoad(aTimeout);
   },
 
-  waitForPageLoad : function(aTimeout) {
+  waitForPageLoad : function Browser_waitForPageLoad(aTimeout) {
     this.controller.waitForPageLoad(aTimeout);
   }
 });

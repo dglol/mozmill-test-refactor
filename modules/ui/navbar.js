@@ -1,13 +1,13 @@
-var inheritance = require("../../modules/external/inheritance");
-var widgets = require("widgets");
+var Inheritance = require("../../modules/external/inheritance");
+var Widgets = require("widgets");
 
-var NavBar = exports.NavBar = inheritance.Class.extend(widgets.Element, {
-  initialize : function(parentNode) {
+var NavBar = exports.NavBar = Inheritance.Class.extend(Widgets.Element, {
+  initialize : function NavBar_initialize(parentNode) {
     this.parent(parentNode, "#nav-bar");
   },
 
   get home() {
-    this._home = this._home || new widgets.Button(this.document, "#home-button");
+    this._home = this._home || new Widgets.Button(this.document, "#home-button");
     return this._home;
   },
 
@@ -18,8 +18,8 @@ var NavBar = exports.NavBar = inheritance.Class.extend(widgets.Element, {
 });
 
 
-var LocationBar = exports.LocationBar = inheritance.Class.extend(widgets.Textbox, {
-  initialize : function(parentNode) {
+var LocationBar = exports.LocationBar = Inheritance.Class.extend(Widgets.Textbox, {
+  initialize : function LocationBar_initialize(parentNode) {
     this.parent(parentNode, "#urlbar");
   }
 });

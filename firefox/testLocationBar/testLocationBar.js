@@ -1,7 +1,7 @@
-var mod_browser = require("../../modules/ui/browser");
+var Browser = require("../../modules/ui/browser");
 
-function setupModule() {
-  browser = mod_browser.init();
+function setupModule(module) {
+  browser = Browser.get();
 }
 
 function testElements() {

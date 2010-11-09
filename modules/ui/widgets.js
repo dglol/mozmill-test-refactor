@@ -34,21 +34,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var inheritance = require("../external/inheritance");
-var dom_utils = require("dom_utils");
+var Inheritance = require("../external/inheritance");
+var DOMUtils = require("dom_utils");
 
-var Element = exports.Element = inheritance.Class.extend({
+var Element = exports.Element = Inheritance.Class.extend({
 
   /**
    * 
    */
-  initialize : function(parentNode, selector) {
+  initialize : function Element_initialize(parentNode, selector) {
     this.parentNode = parentNode;
     this.selector = selector;
     this.document = this.parentNode.ownerDocument || this.parentNode;
     this.window = this.document.defaultView;
 
-    this.collector = new dom_utils.nodeCollector(this.parentNode);
+    this.collector = new DOMUtils.nodeCollector(this.parentNode);
     this.controller = new mozmill.controller.MozMillController(this.window);
   },
 
@@ -61,33 +61,33 @@ var Element = exports.Element = inheritance.Class.extend({
     return this.collector.nodes[0];
   },
 
-  click : function() {
+  click : function Element_click() {
     this.controller.click(this.element);
   }
 });
 
-var Control = exports.Control = inheritance.Class.extend(Element, {
-  initialize : function(parentNode, selector) {
+var Control = exports.Control = Inheritance.Class.extend(Element, {
+  initialize : function Control_initialize(parentNode, selector) {
     this.parent(parentNode, selector);
   },
 
-  keypress : function(aKey, aModifiers) {
+  keypress : function Control_keypress(aKey, aModifiers) {
     this.controller.keypress(this.element, aKey, aModifiers);
   }
 });
 
-var Button = exports.Button = inheritance.Class.extend(Control, {
-  initialize : function(parentNode, selector) {
+var Button = exports.Button = Inheritance.Class.extend(Control, {
+  initialize : function Button_initialize(parentNode, selector) {
     this.parent(parentNode, selector);
   }
 });
 
-var Textbox = exports.Textbox = inheritance.Class.extend(Control, {
-  initialize : function(parentNode, selector) {
+var Textbox = exports.Textbox = Inheritance.Class.extend(Control, {
+  initialize : function Textbox_initialize(parentNode, selector) {
     this.parent(parentNode, selector);
   },
 
-  type : function(aText) {
+  type : function Textbox_type(aText) {
     this.controller.type(this.element, aText);
   }
 });
