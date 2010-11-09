@@ -3,6 +3,8 @@ var Services = require("../../modules/services");
 
 function setupModule(module) {
   browser = Browser.get();
+
+  assert = require("../../modules/assert");
 }
 
 function testElements() {
@@ -14,4 +16,5 @@ function testElements() {
   browser.waitForPageLoad();
 
   var count = Services.sessionStore.getClosedWindowCount(browser.window);
+  assert.is(count, 0, "There should be no window in the undo stack");
 }
