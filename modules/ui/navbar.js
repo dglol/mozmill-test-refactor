@@ -12,7 +12,7 @@ var NavBar = exports.NavBar = Inheritance.Class.extend(Widgets.Element, {
   },
 
   get locationbar() {
-    this._locationbar = this._locationbar || new LocationBar(this.document);
+    this._locationbar = this._locationbar || new LocationBar(this.node);
     return this._locationbar;
   }
 });

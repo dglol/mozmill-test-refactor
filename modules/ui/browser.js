@@ -1,5 +1,6 @@
 var Inheritance = require("../external/inheritance");
 var Navbar = require("navbar");
+var Tabbar = require("tabbar");
 
 // Needed if we have special widgets
 var Widgets = exports.Widgets = require("widgets");
@@ -26,8 +27,13 @@ var Browser = exports.Browser = Inheritance.Class.extend(Widgets.Element, {
   },
 
   get navbar() {
-    this._navbar = this._navbar || new Navbar.NavBar(this._document);
+    this._navbar = this._navbar || new Navbar.NavBar(this.node);
     return this._navbar;
+  },
+
+  get tabbar() {
+    this._tabbar = this._tabbar || new Tabbar.TabBar(this.node);
+    return this._tabbar;
   },
 
   get window() {

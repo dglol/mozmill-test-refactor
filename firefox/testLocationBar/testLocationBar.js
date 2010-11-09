@@ -14,4 +14,6 @@ function testElements() {
 
   var count = Services.sessionStore.getClosedWindowCount(browser.window);
   assert.is(count, 0, "There should be no window in the undo stack");
+
+  assert.is(browser.tabbar.tabs.at(1).tagName, "tab", "Entry is a tab");
 }
