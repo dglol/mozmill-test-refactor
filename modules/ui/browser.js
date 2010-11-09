@@ -19,19 +19,23 @@ var get = exports.get = function get(aWindow) {
  */
 var Browser = exports.Browser = Inheritance.Class.extend(Widgets.Element, {
   initialize : function Browser_initialize(aWindow) {
-    this.window = aWindow || wm.getMostRecentWindow("navigator:browser");
-    this.document = this.window.document;
+    this._window = aWindow || wm.getMostRecentWindow("navigator:browser");
+    this._document = this._window.document;
 
-    this.parent(this.document, "#main-window");
+    this.parent(this._document, "#main-window");
   },
 
   get navbar() {
-    this._navbar = this._navbar || new Navbar.NavBar(this.document);
+    this._navbar = this._navbar || new Navbar.NavBar(this._document);
     return this._navbar;
   },
 
+  get window() {
+    return this._window;
+  },
+
   // temporarily - should be part of the tabs module.
-  loadURL : function Browser_loadURL(aURL) {
+  openURL : function Browser_openURL(aURL, aTimeout) {
     this.navbar.locationbar.type(aURL);
     this.navbar.locationbar.keypress("VK_RETURN", {});
     this.controller.waitForPageLoad(aTimeout);
