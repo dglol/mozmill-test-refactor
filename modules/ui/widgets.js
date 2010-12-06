@@ -34,3 +34,73 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
+
+var Inheritance = require("../external/inheritance");
+var DomUtils = require("../dom_utils");
+
+var Element = Inheritance.Class.extend({
+ // XXX: stub
+});
+
+var XmlElement = Inheritance.Class.extend(Element, {
+ // XXX: stub
+});
+
+var HtmlXulElement = Inheritance.Class.extend(Element, {
+ // XXX: stub
+});
+
+var HtmlElement = Inheritance.Class.extend(HtmlXulElement, {
+  // XXX: stub
+});
+
+var XulElement = Inheritance.Class.extend(HtmlXulElement, {
+  // XXX: stub
+});
+
+var Button = Inheritance.Class.extend(XulElement, {
+  // XXX: stub
+});
+
+var TextBox = Inheritance.Class.extend(XulElement, {
+  // XXX: stub
+});
+
+var Button_Menu = Inheritance.Class.Extend(Button, {
+  // XXX: stub
+});
+
+var Button_MenuButton = Inheritance.Class.Extend(Button, {
+  // XXX: stub
+});
+
+var TextBox_Multi = Inheritance.Class.extend(TextBox, {
+  // XXX: stub
+});
+
+var TextBox_Number = Inheritance.Class.extend(TextBox, {
+  // XXX: stub
+});
+
+var TextBox_Password = Inheritance.Class.extend(TextBox, {
+  // XXX: stub
+});
+
+var TextBox_Auto = Inheritance.Class.extend(TextBox, {
+  // XXX: stub
+});
+
+// Exported Classes
+exports.Element = Element;
+exports.XmlElement = XmlElement;
+exports.HtmlXulElement = HtmlXulElement;
+exports.HtmlElement = HtmlElement;
+exports.XulElement = XulElement;
+exports.Button = Button;
+exports.TextBox = TextBox;
+exports.Button_Menu = Button_Menu;
+exports.Button_MenuButton = Button_MenuButton;
+exports.TextBox_Multi = TextBox_Multi;
+exports.TextBox_Number = TextBox_Number;
+exports.TextBox_Password = TextBox_Password;
+exports.TextBox_Auto = TextBox_Auto;
