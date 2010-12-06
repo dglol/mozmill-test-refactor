@@ -18,8 +18,8 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Henrik Skupin <hskupin@mozilla.com>
  *   Geo Mealer <gmealer@mozilla.com>
+ *   Henrik Skupin <hskupin@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -34,13 +34,3 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-
-
-const PREFERENCES = "@mozilla.org/preferences-service;1";
-const SESSION_STORE = "@mozilla.org/browser/sessionstore;1";
-
-var prefService = Cc[PREFERENCES].getService(Ci.nsIPrefService);
-var sessionStore = Cc[SESSION_STORE].getService(Ci.nsISessionStore);
-
-exports.prefService = prefService;
-exports.sessionStore = sessionStore;
