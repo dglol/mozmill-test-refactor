@@ -59,7 +59,7 @@ function testModule(module) {
 function uiModule(module) {
   // Add generally used requires
   module.Inheritance = require("external/inheritance.js");
-  module.Classes = require("ui/classes.js");
+  module.Widgets = require("ui/widgets.js");
 }
 
 exports.testModule = testModule;
