@@ -38,9 +38,12 @@
 
 const PREFERENCES = "@mozilla.org/preferences-service;1";
 const SESSION_STORE = "@mozilla.org/browser/sessionstore;1";
+const WINDOW_MEDIATOR = "@mozilla.org/appshell/window-mediator;1"
 
-var prefService = Cc[PREFERENCES].getService(Ci.nsIPrefService);
+var preferences = Cc[PREFERENCES].getService(Ci.nsIPrefService);
 var sessionStore = Cc[SESSION_STORE].getService(Ci.nsISessionStore);
+var windowMediator = Cc[WINDOW_MEDIATOR].getService(Ci.nsIWindowMediator);
 
-exports.prefService = prefService;
+exports.preferences = preferences
 exports.sessionStore = sessionStore;
+exports.windowMediator = windowMediator;

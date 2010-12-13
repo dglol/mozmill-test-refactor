@@ -37,9 +37,118 @@
 
 var Inheritance = require("../external/inheritance");
 var DomUtils = require("../dom_utils");
+var Services = require("../services");
 
 var Element = Inheritance.Class.extend({
- // XXX: stub
+  initialize: function Element_initialize(locatorType, locator, owner) {
+    // XXX: I'm not happy with this interface, because of the "variant" nature
+    // of owner. Right now, I can't think of a more elegant way to do it though.
+    //
+    // Already tried splitting responsibilities and making a "region" child class
+    // that took document instead of owner, but I didn't like that it required the 
+    // child class knowing how to fill in the parent class doc/controller. May still
+    // go back to it.
+    
+    // Locators are used to find the element. See _locateElem().
+    this._locatorType = locatorType;
+    this._locator = locator;
+    
+    // Owner can be either the document for the top level of the map,
+    // or another Element that owns this one.
+    if (owner) {
+      if (owner instanceof Element) {
+        // We must be an owned element. Get doc and controller from our owner.
+        this._owner = owner;
+        this._document = owner._document;
+        this._controller = owner._controller;
+      }
+      else {
+        // We must be a top-level element. We sent in a document as owner.
+        this._owner = undefined;
+        this._document = owner;
+        this._controller = mozmill.controller.MozmillController(this._document.defaultView);
+    }
+    else {
+      // Not supplied at all, so we're top level and our doc is the current window.
+      this._owner = undefined;
+      this._controller = mozmill.getBrowserController();
+      this._document = this._controller.window.document;
+    }
+    
+    // We'll lazy-get these when requested
+    this._elem = undefined;
+  },
+  
+  _getCollector(): function Element_getCollector() {
+    // Collectors take either a parent node or a parent document.
+    // If we have an owner, supply its node. Otherwise, supply the
+    // attached document (we're top level).
+    if (this._owner)
+      return new DomUtils.nodeCollector(this._owner.node);
+    else
+      return new DomUtils.nodeCollector(this._document);
+  },
+  
+  _locateElem(): function Element_locateElem() {
+    switch (this._locatorType) {
+      // First the standard Elem constructors.
+      case "node":
+        return elementslib.Elem(this._locator);
+      case "id":
+        return elementslib.ID(this._document, this._locator);
+      case "xpath":
+        return elementslib.XPath(this._document, this._locator);
+      case "name":
+        return elementslib.Name(this._document, this._locator);
+      case "lookup":
+        return elementslib.Lookup(this._document, this._locator);
+
+      // Finally, the nodeCollector. 
+      // XXX: I'm calling this tag instead of selector, because I have 
+      // intentions of introducing a path chain of selectors like 
+      // "#foo/#bar/#baz" that mean "node with selector '#baz' under node 
+      // with selector '#bar' under node with selector #foo, all under the 
+      // owner of this Element". That will give us huge, huge flexibility in
+      // specifying node queries. However, we still have to account for 
+      // property and anonymous locators, so there's significant work to 
+      // be done here. Ultimately, I'm not 100% sure what a final tag will 
+      // look like.
+      case "tag":
+        var collector = _getCollector();
+        collector.queryNodes(this._locator);
+        var foundNode = collector.nodes[0];
+        if (foundNode)
+          return elementslib.Elem(foundNode);
+        else
+          throw Error("Could not find node for tag: " + this._locator);
+      default:
+        throw Error("Unrecognized value: " + this._locatorType);
+    } 
+  },
+  
+  // XXX: note that properties don't properly inherit yet. Need work in
+  // inheritance.js. In the meantime, if need to override, have to split
+  // out the guts of the property into a private _function so that the
+  // parent() function will work correctly, then call private _function
+  // from the property.
+  get document() {
+    return this._document;
+  },
+  
+  get controller() {
+    return this._controller;
+  },
+  
+  get elem() {
+    if (!this._elem)
+      this._elem = this._locateElem();
+    
+    return this._elem;
+  },
+    
+  get node() {
+    return this.elem.getNode();
+  }  
 });
 
 var XmlElement = Inheritance.Class.extend(Element, {
@@ -47,7 +156,7 @@ var XmlElement = Inheritance.Class.extend(Element, {
 });
 
 var HtmlXulElement = Inheritance.Class.extend(Element, {
- // XXX: stub
+  click : 
 });
 
 var HtmlElement = Inheritance.Class.extend(HtmlXulElement, {
