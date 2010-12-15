@@ -45,14 +45,19 @@ var Element = Inheritance.Class.extend({
     // of owner. Right now, I can't think of a more elegant way to do it though.
     //
     // Already tried splitting responsibilities and making a "region" child class
-    // that took document instead of owner, but I didn't like that it required the 
+    // that took document instead of owner, but I didn't like that it required the
     // child class knowing how to fill in the parent class doc/controller. May still
     // go back to it.
-    
+
     // Locators are used to find the element. See _locateElem().
-    this._locatorType = locatorType;
-    this._locator = locator;
+    this._validateLocatorType(locatorType);
+    if (!locator) {
+      throw new Error("Missing locator");
+    }
     
+    this._locator = locator;
+    this._locatorType = locatorType;
+
     // Owner can be either the document for the top level of the map,
     // or another Element that owns this one.
     if (owner) {
@@ -67,6 +72,7 @@ var Element = Inheritance.Class.extend({
         this._owner = undefined;
         this._document = owner;
         this._controller = mozmill.controller.MozmillController(this._document.defaultView);
+      }
     }
     else {
       // Not supplied at all, so we're top level and our doc is the current window.
@@ -74,12 +80,12 @@ var Element = Inheritance.Class.extend({
       this._controller = mozmill.getBrowserController();
       this._document = this._controller.window.document;
     }
-    
+
     // We'll lazy-get these when requested
     this._elem = undefined;
   },
-  
-  _getCollector(): function Element_getCollector() {
+
+  _getCollector: function Element_getCollector() {
     // Collectors take either a parent node or a parent document.
     // If we have an owner, supply its node. Otherwise, supply the
     // attached document (we're top level).
@@ -88,44 +94,58 @@ var Element = Inheritance.Class.extend({
     else
       return new DomUtils.nodeCollector(this._document);
   },
+
+  _validateLocatorType: function element_validateLocatorType(locatorType) {
+    switch (locatorType) {
+      case "node":
+      case "id":
+      case "xpath":
+      case "name":
+      case "lookup":
+      case "tag":
+        return true;
+      default:
+        throw new Error("Invalid locator type: " + locatorType);
+    }
+  },
   
-  _locateElem(): function Element_locateElem() {
+  _locateElem: function Element_locateElem() {
     switch (this._locatorType) {
       // First the standard Elem constructors.
       case "node":
-        return elementslib.Elem(this._locator);
+        return new elementslib.Elem(this._locator);
       case "id":
-        return elementslib.ID(this._document, this._locator);
+        return new elementslib.ID(this._document, this._locator);
       case "xpath":
-        return elementslib.XPath(this._document, this._locator);
+        return new elementslib.XPath(this._document, this._locator);
       case "name":
-        return elementslib.Name(this._document, this._locator);
+        return new elementslib.Name(this._document, this._locator);
       case "lookup":
-        return elementslib.Lookup(this._document, this._locator);
+        return new elementslib.Lookup(this._document, this._locator);
 
-      // Finally, the nodeCollector. 
-      // XXX: I'm calling this tag instead of selector, because I have 
-      // intentions of introducing a path chain of selectors like 
-      // "#foo/#bar/#baz" that mean "node with selector '#baz' under node 
-      // with selector '#bar' under node with selector #foo, all under the 
+      // Finally, the nodeCollector.
+      // XXX: I'm calling this tag instead of selector, because I have
+      // intentions of introducing a path chain of selectors like
+      // "#foo/#bar/#baz" that mean "node with selector '#baz' under node
+      // with selector '#bar' under node with selector #foo, all under the
       // owner of this Element". That will give us huge, huge flexibility in
-      // specifying node queries. However, we still have to account for 
-      // property and anonymous locators, so there's significant work to 
-      // be done here. Ultimately, I'm not 100% sure what a final tag will 
+      // specifying node queries. However, we still have to account for
+      // property and anonymous locators, so there's significant work to
+      // be done here. Ultimately, I'm not 100% sure what a final tag will
       // look like.
       case "tag":
-        var collector = _getCollector();
+        var collector = this._getCollector();
         collector.queryNodes(this._locator);
         var foundNode = collector.nodes[0];
         if (foundNode)
-          return elementslib.Elem(foundNode);
+          return new elementslib.Elem(foundNode);
         else
-          throw Error("Could not find node for tag: " + this._locator);
+          throw new Error("Could not find node for tag: " + this._locator);
       default:
-        throw Error("Unrecognized value: " + this._locatorType);
-    } 
+        throw new Error("Unknown locator type: " + this._locatorType);
+    }
   },
-  
+
   // XXX: note that properties don't properly inherit yet. Need work in
   // inheritance.js. In the meantime, if need to override, have to split
   // out the guts of the property into a private _function so that the
@@ -134,29 +154,29 @@ var Element = Inheritance.Class.extend({
   get document() {
     return this._document;
   },
-  
+
   get controller() {
     return this._controller;
   },
-  
+
   get elem() {
     if (!this._elem)
       this._elem = this._locateElem();
-    
+
     return this._elem;
   },
-    
+
   get node() {
     return this.elem.getNode();
-  }  
+  }
 });
 
 var XmlElement = Inheritance.Class.extend(Element, {
- // XXX: stub
+  // XXX: stub
 });
 
 var HtmlXulElement = Inheritance.Class.extend(Element, {
-  click : 
+  // XXX: stub
 });
 
 var HtmlElement = Inheritance.Class.extend(HtmlXulElement, {
@@ -175,11 +195,11 @@ var TextBox = Inheritance.Class.extend(XulElement, {
   // XXX: stub
 });
 
-var Button_Menu = Inheritance.Class.Extend(Button, {
+var Button_Menu = Inheritance.Class.extend(Button, {
   // XXX: stub
 });
 
-var Button_MenuButton = Inheritance.Class.Extend(Button, {
+var Button_MenuButton = Inheritance.Class.extend(Button, {
   // XXX: stub
 });
 
