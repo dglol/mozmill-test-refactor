@@ -18,7 +18,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Geo Mealer <gmealer@mozilla.com>
+ *   Henrik Skupin <hskupin@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -33,39 +33,25 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-/**
- * Succeeds if the supplied value is true
- *
- * @param value
- *        Value to test for truth
- * @param message
- *        Message to include with result
- */
-function ok(value, message) {
-  message = message + " - " + String(value);
-  mozmill.utils.assert(function () { 
-    return value;
-  }, message);
+
+var Init = require("../modules/init");
+
+function setupModule(module) {
+  Init.testModule(module);
+  browser = Browser.get();
 }
 
-/**
- * Succeeds if got === expected
- *
- * @param got
- *        Actual value
- * @param expected
- *        Expected value
- * @param message
- *        Message to include with result
- */
-function is(got, expected, message) {
-  message = message + " - actual: " + String(got) + ", expected: " + String(expected);
-  mozmill.utils.assert(function () {
-    return (got === expected);
-  }, message);
+function testElements() {
+  browser.navBar.homeButton.click();
+  browser.openUrl("https://addons.mozilla.org");
+  
+  browser.navBar.urlBarText.type("http://www.google.de");
+  browser.navBar.urlBarText.keyPress("VK_RETURN");
+  browser.waitForPageLoad();
+  
+  var count = Services.sessionStore.getClosedWindowCount(browser.window);
+  Assert.is(count, 0, "No windows are in the undo stack");
+  
+  var tabItems = browser.tabBar.tabs.items;
+  Assert.is(tabItems[1].node.tagName, "tab", "Entry is a tab");
 }
-
-// Exported functions
-exports.ok = ok;
-exports.is = is;

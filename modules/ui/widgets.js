@@ -39,22 +39,19 @@ var Inheritance = require("../external/inheritance");
 var DomUtils = require("../dom_utils");
 var Services = require("../services");
 
+// How long we're willing to implicitly wait for an HTML/XUL element to be available 
+// before giving up. Available, right now, means "exists." This should eventually be 
+// made configurable by an external file or similar.
+const ELEM_WAIT_TIME = 5000;
+
 var Element = Inheritance.Class.extend({
   initialize: function Element_initialize(locatorType, locator, owner) {
-    // XXX: I'm not happy with this interface, because of the "variant" nature
-    // of owner. Right now, I can't think of a more elegant way to do it though.
-    //
-    // Already tried splitting responsibilities and making a "region" child class
-    // that took document instead of owner, but I didn't like that it required the
-    // child class knowing how to fill in the parent class doc/controller. May still
-    // go back to it.
-
     // Locators are used to find the element. See _locateElem().
     this._validateLocatorType(locatorType);
     if (!locator) {
       throw new Error("Missing locator");
     }
-    
+
     this._locator = locator;
     this._locatorType = locatorType;
 
@@ -71,7 +68,7 @@ var Element = Inheritance.Class.extend({
         // We must be a top-level element. We sent in a document as owner.
         this._owner = undefined;
         this._document = owner;
-        this._controller = mozmill.controller.MozmillController(this._document.defaultView);
+        this._controller = mozmill.controller.MozMillController(this._document.defaultView);
       }
     }
     else {
@@ -103,25 +100,31 @@ var Element = Inheritance.Class.extend({
       case "name":
       case "lookup":
       case "tag":
-        return true;
+        // locatorType is valid, do nothing
+        break;
       default:
         throw new Error("Invalid locator type: " + locatorType);
     }
   },
-  
+
   _locateElem: function Element_locateElem() {
     switch (this._locatorType) {
       // First the standard Elem constructors.
       case "node":
-        return new elementslib.Elem(this._locator);
+        this._elem = new elementslib.Elem(this._locator);
+        break;
       case "id":
-        return new elementslib.ID(this._document, this._locator);
+        this._elem = new elementslib.ID(this._document, this._locator);
+        break;
       case "xpath":
-        return new elementslib.XPath(this._document, this._locator);
+        this._elem = new elementslib.XPath(this._document, this._locator);
+        break;
       case "name":
-        return new elementslib.Name(this._document, this._locator);
+        this._elem = new elementslib.Name(this._document, this._locator);
+        break;
       case "lookup":
-        return new elementslib.Lookup(this._document, this._locator);
+        this._elem = new elementslib.Lookup(this._document, this._locator);
+        break;
 
       // Finally, the nodeCollector.
       // XXX: I'm calling this tag instead of selector, because I have
@@ -136,11 +139,12 @@ var Element = Inheritance.Class.extend({
       case "tag":
         var collector = this._getCollector();
         collector.queryNodes(this._locator);
-        var foundNode = collector.nodes[0];
-        if (foundNode)
-          return new elementslib.Elem(foundNode);
-        else
+        if (collector.nodes.length < 1)
           throw new Error("Could not find node for tag: " + this._locator);
+        if (collector.nodes.length > 1)
+          throw new Error("Found more than one node for tag: " + this._locator);
+        this._elem = new elementslib.Elem(collector.nodes[0]);
+        break;
       default:
         throw new Error("Unknown locator type: " + this._locatorType);
     }
@@ -158,11 +162,15 @@ var Element = Inheritance.Class.extend({
   get controller() {
     return this._controller;
   },
+  
+  get window() {
+    return this._controller.window;
+  },
 
   get elem() {
     if (!this._elem)
-      this._elem = this._locateElem();
-
+      this._locateElem();
+      
     return this._elem;
   },
 
@@ -175,16 +183,53 @@ var XmlElement = Inheritance.Class.extend(Element, {
   // XXX: stub
 });
 
+var XmlTree = Inheritance.Class.extend(Element, {
+  /// XXX: stub -- XML's equivalent of a region
+});
+
 var HtmlXulElement = Inheritance.Class.extend(Element, {
-  // XXX: stub
+  click: function HtmlXulElement_click(left, top) {
+    this.controller.click(this.elem, left, top);
+  },
+  
+  doubleClick: function HtmlXulElement_doubleClick(left, top) {
+    this.controller.click(this.elem, left, top);
+  },
+
+  keyPress: function HtmlXulElement_keypress(keycode, modifiers) {
+    modifiers = modifiers || {};
+    this.controller.keypress(this.elem, keycode, modifiers);
+  },
+  
+  mouseDown: function HtmlXulElement_mouseDown(button, left, top) {
+    this.controller.mouseDown(this.elem, button, left, top);
+  },
+  
+  mouseUp: function HtmlXulElement_mouseUp(button, left, top) {
+    this.controller.mouseUp(this.elem, button, left, top);
+  },
+  
+  rightClick: function HtmlXulElement_rightClick(left, top) {
+    this.controller.rightClick(this.elem, left, top);
+  }
 });
 
 var HtmlElement = Inheritance.Class.extend(HtmlXulElement, {
   // XXX: stub
 });
 
+var HtmlRegion = Inheritance.Class.extend(HtmlElement, {
+  // XXX: stub -- May have to reimplement with mixins
+  // since some things may be shared with XulRegion
+});
+
 var XulElement = Inheritance.Class.extend(HtmlXulElement, {
   // XXX: stub
+});
+
+var XulRegion = Inheritance.Class.extend(XulElement, {
+  // XXX: stub -- May have to reimplement with mixins
+  // since some things may be shared with HtmlRegion
 });
 
 var Button = Inheritance.Class.extend(XulElement, {
@@ -192,7 +237,13 @@ var Button = Inheritance.Class.extend(XulElement, {
 });
 
 var TextBox = Inheritance.Class.extend(XulElement, {
-  // XXX: stub
+  getText: function TextBox_getText() {
+    return this.node.value;
+  },
+  
+  type: function TextBox_type(text) {
+    this.controller.type(this.elem, text);
+  }
 });
 
 var Button_Menu = Inheritance.Class.extend(Button, {
@@ -224,7 +275,9 @@ exports.Element = Element;
 exports.XmlElement = XmlElement;
 exports.HtmlXulElement = HtmlXulElement;
 exports.HtmlElement = HtmlElement;
+exports.HtmlRegion = HtmlRegion;
 exports.XulElement = XulElement;
+exports.XulRegion = XulRegion;
 exports.Button = Button;
 exports.TextBox = TextBox;
 exports.Button_Menu = Button_Menu;

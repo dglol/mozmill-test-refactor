@@ -44,6 +44,8 @@
 function testModule(module) {
   // Add generally used requires
   module.Assert = require("assert");
+  module.Services = require("services");
+  module.Browser = require("ui/browser");
 
   // Initialize the test module
   // XXX: Holding off on adding this until we're sure how we get the browser
@@ -52,6 +54,7 @@ function testModule(module) {
 
 /**
  * Basic initialization we want for every UI module
+ * Currently can't be used because setupModule isn't called for shared mods
  *
   * @param module
   *        UI module to initialize

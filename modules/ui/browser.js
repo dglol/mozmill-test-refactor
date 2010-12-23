@@ -18,6 +18,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   Henrik Skupin <hskupin@mozilla.com>
  *   Geo Mealer <gmealer@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -33,39 +34,39 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-/**
- * Succeeds if the supplied value is true
- *
- * @param value
- *        Value to test for truth
- * @param message
- *        Message to include with result
- */
-function ok(value, message) {
-  message = message + " - " + String(value);
-  mozmill.utils.assert(function () { 
-    return value;
-  }, message);
+
+var TabBar = require("tabbar");
+var NavBar = require("navbar");
+var Widgets = require("widgets");
+var Inheritance = require("../external/inheritance");
+
+var get = function get(document) {
+  return new Browser(document);
 }
 
-/**
- * Succeeds if got === expected
- *
- * @param got
- *        Actual value
- * @param expected
- *        Expected value
- * @param message
- *        Message to include with result
- */
-function is(got, expected, message) {
-  message = message + " - actual: " + String(got) + ", expected: " + String(expected);
-  mozmill.utils.assert(function () {
-    return (got === expected);
-  }, message);
-}
+var Browser = Inheritance.Class.extend(Widgets.XulRegion, {
+  initialize: function Browser_initialize(document) {
+    this.parent("tag", "#main-window", document);
+    
+    this.tabBar = new TabBar.TabBar(this);
+    this.navBar = new NavBar.NavBar(this);
+  },
 
-// Exported functions
-exports.ok = ok;
-exports.is = is;
+  // Original said this was part of tabs, but disagree. This will have to be
+  // part of browser, because browser will be the class that has A) a link to
+  // the navBar and B) a link to the tabs in order to check that the page
+  // actually appeared after waitForPageLoad ends.
+  openUrl: function Browser_openUrl(text, timeout) {
+    this.navBar.urlBarText.type(text);
+    this.navBar.urlBarText.keyPress("VK_RETURN");
+    this.waitForPageLoad(timeout);
+    // XXX: should check after itself to see if page is actually loaded and
+    // throw an error if not.
+  },
+  
+  waitForPageLoad: function Browser_waitForPageLoad(timeout) {
+    this.controller.waitForPageLoad(timeout);
+  }
+});
+
+exports.get = get;

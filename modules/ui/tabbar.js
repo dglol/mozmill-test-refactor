@@ -18,6 +18,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   Henrik Skupin <hskupin@mozilla.com>
  *   Geo Mealer <gmealer@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -33,39 +34,40 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-/**
- * Succeeds if the supplied value is true
- *
- * @param value
- *        Value to test for truth
- * @param message
- *        Message to include with result
- */
-function ok(value, message) {
-  message = message + " - " + String(value);
-  mozmill.utils.assert(function () { 
-    return value;
-  }, message);
-}
 
-/**
- * Succeeds if got === expected
- *
- * @param got
- *        Actual value
- * @param expected
- *        Expected value
- * @param message
- *        Message to include with result
- */
-function is(got, expected, message) {
-  message = message + " - actual: " + String(got) + ", expected: " + String(expected);
-  mozmill.utils.assert(function () {
-    return (got === expected);
-  }, message);
-}
+var Inheritance = require("../external/inheritance");
+var Widgets = require("widgets");
+var DomUtils = require("../dom_utils");
 
-// Exported functions
-exports.ok = ok;
-exports.is = is;
+var TabBar = Inheritance.Class.extend(Widgets.XulRegion, {
+  initialize: function TabBar_initialize(owner) {
+    this.parent("tag", "#TabsToolbar", owner);
+    
+    this.tabs = new Tabs("tag", "#tabbrowser-tabs", this);
+  } 
+});
+
+var Tabs = Inheritance.Class.extend(Widgets.XulElement, {
+  get items() {
+    var collector = new DomUtils.nodeCollector(this.node);
+    collector.queryNodes(".tabbrowser-tab");
+    
+    var tabElements = [];
+    collector.nodes.forEach(function (node) {
+      tabElements.push(new Tab("node", node, this));
+    }, this);
+    
+    return tabElements;
+  }
+  
+  // Intentionally leaving off length/at for the moment. Reason is that the
+  // above process is slow enough that the best practice will be to just grab
+  // all the rows into a separate var and deal with them from there. Using
+  // length/at will cause a requery every time (and should, tabs are dynamic).
+});
+
+var Tab = Inheritance.Class.extend(Widgets.XulElement, {
+  /// XXX: stub
+});
+
+exports.TabBar = TabBar;

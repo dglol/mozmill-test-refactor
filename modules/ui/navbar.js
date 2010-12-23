@@ -18,6 +18,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   Henrik Skupin <hskupin@mozilla.com>
  *   Geo Mealer <gmealer@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -33,39 +34,17 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-/**
- * Succeeds if the supplied value is true
- *
- * @param value
- *        Value to test for truth
- * @param message
- *        Message to include with result
- */
-function ok(value, message) {
-  message = message + " - " + String(value);
-  mozmill.utils.assert(function () { 
-    return value;
-  }, message);
-}
 
-/**
- * Succeeds if got === expected
- *
- * @param got
- *        Actual value
- * @param expected
- *        Expected value
- * @param message
- *        Message to include with result
- */
-function is(got, expected, message) {
-  message = message + " - actual: " + String(got) + ", expected: " + String(expected);
-  mozmill.utils.assert(function () {
-    return (got === expected);
-  }, message);
-}
+var Inheritance = require("../external/inheritance");
+var Widgets = require("widgets");
 
-// Exported functions
-exports.ok = ok;
-exports.is = is;
+var NavBar = Inheritance.Class.extend(Widgets.XulRegion, {
+  initialize: function NavBar_initialize(owner) {
+    this.parent("tag", "#nav-bar", owner);
+    
+    this.homeButton = new Widgets.Button("tag", "#home-button", this);
+    this.urlBarText = new Widgets.TextBox("tag", "#urlbar", this);
+  }  
+});
+
+exports.NavBar = NavBar;
