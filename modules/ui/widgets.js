@@ -209,7 +209,7 @@ var XmlElement = Inheritance.Class.extend(Element,
    * @extends widgets.Element
    */
    initialize: function XmlElement_initialize(locatorType, locator, owner) {
-     this.parent.initialize(locatorType, locator, owner);
+     this.parent(locatorType, locator, owner);
    }
 });
 
@@ -225,7 +225,7 @@ var XmlTree = Inheritance.Class.extend(Element,
    * @extends widgets.Element
    */
    initialize: function XmlTree_initialize(locatorType, locator, owner) {
-     this.parent.initialize(locatorType, locator, owner);
+     this.parent(locatorType, locator, owner);
    }
 });
 
@@ -243,7 +243,7 @@ var HtmlXulElement = Inheritance.Class.extend(Element,
    * @extends widgets.Element
    */
   initialize: function HtmlXulElement_initialize(locatorType, locator, owner) {
-    this.parent.initialize(locatorType, locator, owner);
+    this.parent(locatorType, locator, owner);
   },
   
   click: function HtmlXulElement_click(left, top) {
@@ -284,7 +284,7 @@ var HtmlElement = Inheritance.Class.extend(HtmlXulElement,
    * @extends widgets.HtmlXulElement
    */
   initialize: function HtmlElement_initialize(locatorType, locator, owner) {
-    this.parent.initialize(locatorType, locator, owner);
+    this.parent(locatorType, locator, owner);
   },  
 });
 
@@ -301,7 +301,7 @@ var HtmlRegion = Inheritance.Class.extend(HtmlElement,
    * @extends widgets.HtmlElement
    */
   initialize: function HtmlRegion_initialize(locatorType, locator, owner) {
-    this.parent.initialize(locatorType, locator, owner);
+    this.parent(locatorType, locator, owner);
   },  
 });
 
@@ -318,7 +318,7 @@ var XulElement = Inheritance.Class.extend(HtmlXulElement,
    * @extends widgets.HtmlXulElement
    */
   initialize: function XulElement_initialize(locatorType, locator, owner) {
-    this.parent.initialize(locatorType, locator, owner);
+    this.parent(locatorType, locator, owner);
   },  
 });
 
@@ -335,7 +335,7 @@ var XulRegion = Inheritance.Class.extend(XulElement,
    * @extends widgets.XulElement
    */
   initialize: function XulRegion_initialize(locatorType, locator, owner) {
-    this.parent.initialize(locatorType, locator, owner);
+    this.parent(locatorType, locator, owner);
   },  
 });
 
