@@ -35,16 +35,33 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/**
+ * @name widgets
+ * @namespace Defines proxy classes for creation of a hierarchical map
+ */
+
 var Inheritance = require("../external/inheritance");
 var DomUtils = require("../dom_utils");
 var Services = require("../services");
 
-// How long we're willing to implicitly wait for an HTML/XUL element to be available 
-// before giving up. Available, right now, means "exists." This should eventually be 
+// How long we're willing to implicitly wait for an HTML/XUL element to be available
+// before giving up. Available, right now, means "exists." This should eventually be
 // made configurable by an external file or similar.
 const ELEM_WAIT_TIME = 5000;
 
-var Element = Inheritance.Class.extend({
+var Element = Inheritance.Class.create(
+/** @lends widgets.Element */
+{
+  /**
+   * Element is a proxy for an element of a DOM. It defines the core binding
+   * behavior: locating the element via any of serveral lookup methods.
+   * It also provides the owner/owned relationship that allows Elements to be
+   * arranged in a hierarchy.
+   *
+   * @class A proxy for an element of a DOM
+   * @constructs
+   * @memberOf widgets
+   */
   initialize: function Element_initialize(locatorType, locator, owner) {
     // Locators are used to find the element. See _locateElem().
     this._validateLocatorType(locatorType);
@@ -162,7 +179,7 @@ var Element = Inheritance.Class.extend({
   get controller() {
     return this._controller;
   },
-  
+
   get window() {
     return this._controller.window;
   },
@@ -170,7 +187,7 @@ var Element = Inheritance.Class.extend({
   get elem() {
     if (!this._elem)
       this._locateElem();
-      
+
     return this._elem;
   },
 
@@ -179,19 +196,60 @@ var Element = Inheritance.Class.extend({
   }
 });
 
-var XmlElement = Inheritance.Class.extend(Element, {
-  // XXX: stub
+var XmlElement = Inheritance.Class.extend(Element,
+/** @lends widgets.XmlElement */
+{
+  /**
+   * XmlElement is an Element that corresponds to a single element in
+   * an XML document.
+   *
+   * @class An Element that corresponds to a single element in an XML document
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.Element
+   */
+   initialize: function XmlElement_initialize(locatorType, locator, owner) {
+     this.parent(locatorType, locator, owner);
+   }
 });
 
-var XmlTree = Inheritance.Class.extend(Element, {
-  /// XXX: stub -- XML's equivalent of a region
+var XmlTree = Inheritance.Class.extend(Element,
+/** @lends widgets.XmlTree */
+{
+  /**
+   * XmlTree is an Element that corresponds to a subtree of an XML document.
+   *
+   * @class An Element that corresponds to a subtree in an XML document.
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.Element
+   */
+   initialize: function XmlTree_initialize(locatorType, locator, owner) {
+     this.parent(locatorType, locator, owner);
+   }
 });
 
-var HtmlXulElement = Inheritance.Class.extend(Element, {
+var HtmlXulElement = Inheritance.Class.extend(Element,
+/** @lends widgets.HtmlXulElement */
+{
+  /**
+   * HtmlXulElement is an Element that corresponds to an element of a
+   * HTML or Chrome document. More specific behavior for each is defined in
+   * the child classes HtmlElement and XulElement.
+   *
+   * @class An Element that corresponds to an element of an HTML or Chrome document
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.Element
+   */
+  initialize: function HtmlXulElement_initialize(locatorType, locator, owner) {
+    this.parent(locatorType, locator, owner);
+  },
+
   click: function HtmlXulElement_click(left, top) {
     this.controller.click(this.elem, left, top);
   },
-  
+
   doubleClick: function HtmlXulElement_doubleClick(left, top) {
     this.controller.click(this.elem, left, top);
   },
@@ -200,36 +258,85 @@ var HtmlXulElement = Inheritance.Class.extend(Element, {
     modifiers = modifiers || {};
     this.controller.keypress(this.elem, keycode, modifiers);
   },
-  
+
   mouseDown: function HtmlXulElement_mouseDown(button, left, top) {
     this.controller.mouseDown(this.elem, button, left, top);
   },
-  
+
   mouseUp: function HtmlXulElement_mouseUp(button, left, top) {
     this.controller.mouseUp(this.elem, button, left, top);
   },
-  
+
   rightClick: function HtmlXulElement_rightClick(left, top) {
     this.controller.rightClick(this.elem, left, top);
   }
 });
 
-var HtmlElement = Inheritance.Class.extend(HtmlXulElement, {
-  // XXX: stub
+var HtmlElement = Inheritance.Class.extend(HtmlXulElement,
+/** @lends widgets.HtmlElement */
+{
+  /**
+   * HtmlElement is an Element that corresponds to an element of an HTML document.
+   *
+   * @class An Element that corresponds to an element of an HTML document.
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.HtmlXulElement
+   */
+  initialize: function HtmlElement_initialize(locatorType, locator, owner) {
+    this.parent(locatorType, locator, owner);
+  },
 });
 
-var HtmlRegion = Inheritance.Class.extend(HtmlElement, {
-  // XXX: stub -- May have to reimplement with mixins
-  // since some things may be shared with XulRegion
+var HtmlRegion = Inheritance.Class.extend(HtmlElement,
+/** @lends widgets.HtmlRegion */
+{
+  /**
+   * HtmlRegion is an Element that corresponds to a grouping container in an HTML
+   * document.
+   *
+   * @class An Element that corresponds to a grouping container in an HTML document.
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.HtmlElement
+   */
+  initialize: function HtmlRegion_initialize(locatorType, locator, owner) {
+    this.parent(locatorType, locator, owner);
+  },
 });
 
-var XulElement = Inheritance.Class.extend(HtmlXulElement, {
-  // XXX: stub
+var XulElement = Inheritance.Class.extend(HtmlXulElement,
+/** @lends widgets.XulElement */
+{
+  /**
+   * XulElement is an Element that corresponds to an element of a Chrome
+   * document.
+   *
+   * @class An Element that corresponds to an element of a Chrome document.
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.HtmlXulElement
+   */
+  initialize: function XulElement_initialize(locatorType, locator, owner) {
+    this.parent(locatorType, locator, owner);
+  },
 });
 
-var XulRegion = Inheritance.Class.extend(XulElement, {
-  // XXX: stub -- May have to reimplement with mixins
-  // since some things may be shared with HtmlRegion
+var XulRegion = Inheritance.Class.extend(XulElement,
+/** @lends widgets.XulRegion */
+{
+  /**
+   * XulRegion is an Element that corresponds to a grouping container in a Chrome
+   * document.
+   *
+   * @class An Element that corresponds to a grouping container in a Chrome document.
+   * @constructs
+   * @memberOf widgets
+   * @extends widgets.XulElement
+   */
+  initialize: function XulRegion_initialize(locatorType, locator, owner) {
+    this.parent(locatorType, locator, owner);
+  },
 });
 
 var Button = Inheritance.Class.extend(XulElement, {
@@ -240,7 +347,7 @@ var TextBox = Inheritance.Class.extend(XulElement, {
   getText: function TextBox_getText() {
     return this.node.value;
   },
-  
+
   type: function TextBox_type(text) {
     this.controller.type(this.elem, text);
   }
