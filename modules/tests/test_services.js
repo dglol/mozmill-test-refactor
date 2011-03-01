@@ -14,12 +14,11 @@
  * The Original Code is MozMill Test code.
  *
  * The Initial Developer of the Original Code is the Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Portions created by the Initial Developer are Copyright (C) 2011
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Henrik Skupin <hskupin@mozilla.com>
- *   Geo Mealer <gmealer@mozilla.com>
+ *   Henrik Skupin <mail@hskupin.info> (Original Author)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,28 +34,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var init = require("../modules/init");
+var init = require("../init");
+
 
 function setupModule(module) {
   init.testModule(module);
-  browser = Browser.get();
 }
 
 
-function testElements() {
-  browser.navBar.homeButton.click();
-  browser.openUrl("https://addons.mozilla.org");
-  
-  browser.navBar.urlBarText.type("http://www.google.de");
-  browser.navBar.urlBarText.keyPress("VK_RETURN");
-  browser.waitForPageLoad();
-
-  expect.match(browser.navBar.urlBarText.getText(), /google/);
-  expect.notMatch(browser.navBar.urlBarText.getText(), /mozilla/);
-
-  var count = services.session.getClosedWindowCount(browser.window);
-  expect.equal(count, 0, "No windows are in the undo stack");
-
-  var tabItems = browser.tabBar.tabs.items;
-  expect.equal(tabItems[1].node.tagName, "tab", "Entry is a tab");
+/**
+ * Test if all wrapped back-end services are available
+ */
+function testServices() {
+  for (let service in services) {
+    let message = "Service '" + service + "' is available";
+    expect.ok(services[service], message);
+  }
 }

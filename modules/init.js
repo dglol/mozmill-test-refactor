@@ -73,9 +73,17 @@ function testModule(aModule) {
    */
   aModule.expect = require("assertions").expect;
 
-  aModule.Services = require("services");
-  aModule.Browser = require("ui/browser");
+  /**
+   * Object with wrapper methods for back-end services
+   *
+   * @name services
+   * @type services
+   * @memberOf module
+   */
+  aModule.services = require("services");
 
+
+  aModule.Browser = require("ui/browser");
   // Initialize the test module
   // XXX: Holding off on adding this until we're sure how we get the browser
   // module.browser = require("ui/browser").get();
