@@ -35,12 +35,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var Init = require("../modules/init");
+var init = require("../modules/init");
 
 function setupModule(module) {
-  Init.testModule(module);
+  init.testModule(module);
   browser = Browser.get();
 }
+
 
 function testElements() {
   browser.navBar.homeButton.click();
@@ -49,10 +50,13 @@ function testElements() {
   browser.navBar.urlBarText.type("http://www.google.de");
   browser.navBar.urlBarText.keyPress("VK_RETURN");
   browser.waitForPageLoad();
-  
+
+  expect.match(browser.navBar.urlBarText.getText(), /google/);
+  expect.notMatch(browser.navBar.urlBarText.getText(), /mozilla/);
+
   var count = Services.sessionStore.getClosedWindowCount(browser.window);
-  Assert.is(count, 0, "No windows are in the undo stack");
+  expect.equal(count, 0, "No windows are in the undo stack");
   
   var tabItems = browser.tabBar.tabs.items;
-  Assert.is(tabItems[1].node.tagName, "tab", "Entry is a tab");
+  expect.equal(tabItems[1].node.tagName, "tab", "Entry is a tab");
 }

@@ -14,11 +14,11 @@
  * The Original Code is MozMill Test code.
  *
  * The Initial Developer of the Original Code is the Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Portions created by the Initial Developer are Copyright (C) 2011
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Geo Mealer <gmealer@mozilla.com>
+ *   Henrik Skupin <mail@hskupin.info> (Original Author)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -33,39 +33,53 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-/**
- * Succeeds if the supplied value is true
- *
- * @param value
- *        Value to test for truth
- * @param message
- *        Message to include with result
- */
-function ok(value, message) {
-  message = message + " - " + String(value);
-  mozmill.utils.assert(function () { 
-    return value;
-  }, message);
-}
 
 /**
- * Succeeds if got === expected
- *
- * @param got
- *        Actual value
- * @param expected
- *        Expected value
- * @param message
- *        Message to include with result
+ * @name errors
+ * @namespace Defines error classes to be used for exceptions.
  */
-function is(got, expected, message) {
-  message = message + " - actual: " + String(got) + ", expected: " + String(expected);
-  mozmill.utils.assert(function () {
-    return (got === expected);
-  }, message);
+var errors = exports;
+
+
+/**
+ * All methods for fatal assertions as implemented in assertions.Assert throw
+ * an AssertionError as exception type if a test fails.
+ *
+ * @class Error class which is used by Assert to raise an assertion exception.
+ * @constructor
+ * @memberOf errors
+ * @see assertions.Assert
+ * @param {object} aResult
+ *   Test result details used for error reporting.
+ *   <dl>
+ *     <dd>fileName</dd>
+ *     <dt>Name of the file in which the assertion failed.</dt>
+ *     <dd>function</dd>
+ *     <dt>Function in which the assertion failed.</dt>
+ *     <dd>lineNumber</dd>
+ *     <dt>Line number of the file in which the assertion failed.</dt>
+ *     <dd>message</dd>
+ *     <dt>Message why the assertion failed.</dt>
+ *   </dl>
+ * @returns {AssertionError} Instance of the AssertionError class.
+ */
+function AssertionError(aResult) {
+  let error = Object.create(AssertionError.prototype);
+
+  error.message = aResult.message;
+  error.fileName = aResult.fileName;
+  error.lineNumber = aResult.lineNumber;
+  error.function = aResult.function;
+
+  return error;
 }
 
-// Exported functions
-exports.ok = ok;
-exports.is = is;
+AssertionError.prototype = Object.create(Error.prototype,
+{
+  constructor: { value: AssertionError },
+  name: { value: "AssertionError" }
+});
+
+
+// Export of classes
+errors.AssertionError = AssertionError;

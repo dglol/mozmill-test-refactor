@@ -18,7 +18,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Henrik Skupin <hskupin@mozilla.com>
+ *   Henrik Skupin <mail@hskupin.info>
  *   Geo Mealer <gmealer@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -36,34 +36,67 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
+ * @name init
+ * @namespace Helper methods for the general setup and teardown logic of tests
+ *            and methods
+ */
+
+/**
+ * @name module
+ * @namespace Augmented features into the Mozmill module scope
+ */
+
+
+/**
  * Basic initialization we want for every test module
  *
- * @param module
+ * @memberOf init
+ * @param {object} aModule
  *        Test module to initialize
  */
-function testModule(module) {
-  // Add generally used requires
-  module.Assert = require("assert");
-  module.Services = require("services");
-  module.Browser = require("ui/browser");
+function testModule(aModule) {
+  /**
+   * Instance of the Assert class to execute tests with fatal assertions
+   *
+   * @name assert
+   * @type assertions.Assert
+   * @memberOf module
+   */
+  aModule.assert = require("assertions").assert;
+
+  /**
+   * Instance of the Expect class to execute tests with non-fatal assertions
+   *
+   * @name expect
+   * @type assertions.Expect
+   * @memberOf module
+   */
+  aModule.expect = require("assertions").expect;
+
+  aModule.Services = require("services");
+  aModule.Browser = require("ui/browser");
 
   // Initialize the test module
   // XXX: Holding off on adding this until we're sure how we get the browser
   // module.browser = require("ui/browser").get();
 }
 
+
 /**
  * Basic initialization we want for every UI module
  * Currently can't be used because setupModule isn't called for shared mods
  *
-  * @param module
-  *        UI module to initialize
-  */
-function uiModule(module) {
+ * @memberOf init
+ * @param {object} aModule
+ *        UI module to initialize
+ */
+function uiModule(aModule) {
   // Add generally used requires
-  module.Inheritance = require("external/inheritance");
-  module.Widgets = require("ui/widgets");
+  aModule.Inheritance = require("external/inheritance");
+  aModule.Widgets = require("ui/widgets");
 }
 
+
+// Export of methods
 exports.testModule = testModule;
 exports.uiModule = uiModule;
