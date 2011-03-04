@@ -34,20 +34,46 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var init = require("../init");
-var services = require("../services");
-
-function setupModule(module) {
-  init.testModule(module);
-}
+/**
+ * @name stack_utils
+ * @namespace Defines utility methods for handling stack frames
+ */
+var stack_utils = exports;
 
 
 /**
- * Test if all wrapped back-end services are available
+ * Find the frame to use for logging the test result. If a start frame has
+ * been specified, we walk down the stack until a frame with the same filename
+ * as the start frame has been found. The next file in the stack will be the
+ * frame to use for logging the result.
+ *
+ * @memberOf stack_utils
+ * @param {Object} [aStartFrame=Components.stack] Frame to start from walking up the stack.
+ * @returns {Object} Frame of the stack to use for logging the result.
  */
-function testServices() {
-  for (let service in services) {
-    let message = "Service '" + service + "' is available";
-    expect.ok(services[service], message);
+function findCallerFrame(aStartFrame) {
+  let frame = Components.stack;
+  let filename = frame.filename.replace(/(.*)-> /, "");
+
+  // If a start frame has been specified, walk up the stack until we have
+  // found the corresponding file
+  if (aStartFrame) {
+    filename = aStartFrame.filename.replace(/(.*)-> /, "");
+
+    while (frame.caller &&
+           frame.filename && !frame.filename.match(filename)) {
+      frame = frame.caller;
+    }
   }
+
+  // Walk even up more until the next file has been found
+  while (frame.caller &&
+         (!frame.filename || frame.filename.match(filename)))
+    frame = frame.caller;
+  
+  return frame;
 }
+
+
+// Export of functions
+stack_utils.findCallerFrame = findCallerFrame;

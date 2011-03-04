@@ -34,20 +34,45 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var init = require("../init");
-var services = require("../services");
+/**
+ * @name driver
+ * @namespace Defines the Mozmill driver for global actions
+ */
+var driver = exports;
 
-function setupModule(module) {
-  init.testModule(module);
-}
+
+// Include necessary modules
+const { TimeoutError } = require('errors');
+var stackUtils = require('stack-utils');
 
 
 /**
- * Test if all wrapped back-end services are available
+ * Wait until the given condition via the callback returns true.
+ *
+ * @memberOf driver
+ * @param {Function} aCallback Callback which has to return true for a pass
+ * @param {String} [aMessage] Message to use if a timeout occurs
+ * @param {Number} [aTimeout=5000] Number of milliseconds until a timeout occurs
+ * @param {Number} [aInterval=100] Number of milliseconds between each iteration
+ * @param {Object} [aThisObject] Reference to the object this references
+ * @throws {TimeoutError}
  */
-function testServices() {
-  for (let service in services) {
-    let message = "Service '" + service + "' is available";
-    expect.ok(services[service], message);
+function waitFor(aCallback, aMessage, aTimeout, aInterval, aThisObject) {
+  // XXX Bug 637941
+  // Until Mozmill doesn't throw a distinct error for timeouts we have to
+  // catch the exception and throw it again, if it's a timeout error. We also
+  // can't pass the message to the waitFor method.
+  try {
+    mozmill.utils.waitFor(aCallback, null, aTimeout, aInterval, aThisObject);
+  }
+  catch (ex if ex.message.match(/Timeout exceeded for/)) {
+    let frame = stackUtils.findCallerFrame(Components.stack);
+    let filename = frame.filename.replace(/(.*)-> /, "");
+
+    throw new TimeoutError(aMessage, filename, frame.lineNumber, frame.name);
   }
 }
+
+
+// Export of functions
+driver.waitFor = waitFor;

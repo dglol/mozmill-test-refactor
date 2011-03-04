@@ -44,6 +44,7 @@ var assertions = exports;
 // Include necessary modules
 const { Class } = require("external/inheritance");
 const { AssertionError } = require('errors');
+const { findCallerFrame } = require('stack-utils');
 
 
 // Use the frame module of Mozmill to raise non-fatal failures
@@ -61,62 +62,25 @@ var Expect = Class.create(
    *
    * @class Base class for non-fatal assertions
    * @constructs
-   * @param {object} [aStartFrame=Components.stack]
+   * @param {Object} [aStartFrame=Components.stack]
    *   Frame to use for logging the test result. If a start frame has been
    *   specified, we walk down the stack until a frame with the same filename
    *   as the start frame has been found. The next file in the stack will be
    *   the frame to use for logging the result.
+   * @see stack-utils
    */
   initialize: function Expect_initialize(aStartFrame) {
     this._startFrame = aStartFrame;
   },
 
   /**
-   * Find the frame to use for logging the test result. If a start frame has
-   * been specified, we walk down the stack until a frame with the same filename
-   * as the start frame has been found. The next file in the stack will be the
-   * frame to use for logging the result.
-   *
-   * @returns {object} Frame of the stack to use for logging the result.
-   */
-  _findCallerFrame: function Expect__findCallerFrame() {
-    let frame = Components.stack;
-    let filename = frame.filename.replace(/(.*)-> /, "");
-
-    // If a start frame has been specified, walk up the stack until we have
-    // found the corresponding file
-    if (this._startFrame) {
-      filename = this._startFrame.filename.replace(/(.*)-> /, "");
-
-      while (frame.caller &&
-             frame.filename && !frame.filename.match(filename)) {
-        frame = frame.caller;
-      }
-    }
-
-    // Walk even up more until the next file has been found
-    while (frame.caller &&
-           (!frame.filename || frame.filename.match(filename)))
-      frame = frame.caller;
-    
-    return frame;
-  },
-
-  /**
    * Log a test as failing by adding a fail frame.
    *
-   * @param {object} aResult
-   *   Test result details used for reporting.
-   *   <dl>
-   *     <dd>fileName</dd>
-   *     <dt>Name of the file in which the assertion failed.</dt>
-   *     <dd>function</dd>
-   *     <dt>Function in which the assertion failed.</dt>
-   *     <dd>lineNumber</dd>
-   *     <dt>Line number of the file in which the assertion failed.</dt>
-   *     <dd>message</dd>
-   *     <dt>Message why the assertion failed.</dt>
-   *   </dl>
+   * @param {Object} aResult Test result details used for reporting.
+   * @param {String} aResult.fileName Name of the file in which the assertion failed.
+   * @param {String} aResult.function Function in which the assertion failed.
+   * @param {Number} aResult.lineNumber Line number of the file in which the assertion failed.
+   * @param {String} aResult.message Message why the assertion failed.
    */
   _logFail: function Expect__logFail(aResult) {
     mozmillFrame.events.fail({fail: aResult});
@@ -125,18 +89,11 @@ var Expect = Class.create(
   /**
    * Log a test as passing by adding a pass frame.
    *
-   * @param {object} aResult
-   *   Test result details used for reporting.
-   *   <dl>
-   *     <dd>fileName</dd>
-   *     <dt>Name of the file in which the assertion failed.</dt>
-   *     <dd>function</dd>
-   *     <dt>Function in which the assertion failed.</dt>
-   *     <dd>lineNumber</dd>
-   *     <dt>Line number of the file in which the assertion failed.</dt>
-   *     <dd>message</dd>
-   *     <dt>Message why the assertion failed.</dt>
-   *   </dl>
+   * @param {Object} aResult Test result details used for reporting.
+   * @param {String} aResult.fileName Name of the file in which the assertion failed.
+   * @param {String} aResult.function Function in which the assertion failed.
+   * @param {Number} aResult.lineNumber Line number of the file in which the assertion failed.
+   * @param {String} aResult.message Message why the assertion failed.
    */
   _logPass: function Expect__logPass(aResult) {
     mozmillFrame.events.pass({pass: aResult});
@@ -145,13 +102,10 @@ var Expect = Class.create(
   /**
    * Test the condition and mark test as passed or failed
    *
-   * @param {boolean} aCondition
-   *   Condition to test.
-   * @param {string} aMessage
-   *   Message to show for the test result
-   * @param {string} aDiagnosis
-   *   Diagnose message to show for the test result
-   * @returns {boolean} Result of the test.
+   * @param {Boolean} aCondition Condition to test.
+   * @param {String} aMessage Message to show for the test result
+   * @param {String} aDiagnosis Diagnose message to show for the test result
+   * @returns {Boolean} Result of the test.
    */
   _test: function Expect__test(aCondition, aMessage, aDiagnosis) {
     let diagnosis = aDiagnosis || "";
@@ -161,7 +115,8 @@ var Expect = Class.create(
       message = aMessage ? message + " - " + aDiagnosis : aDiagnosis;
 
     // Build result data
-    let frame = this._findCallerFrame();
+    let frame = findCallerFrame(this._startFrame);
+
     let result = {
       'fileName'   : frame.filename.replace(/(.*)-> /, ""),
       'function'   : frame.name,
@@ -181,9 +136,8 @@ var Expect = Class.create(
   /**
    * Perform an always passing test
    *
-   * @param {string} aMessage
-   *   Message to show for the test result.
-   * @returns {boolean} Always returns true.
+   * @param {String} aMessage Message to show for the test result.
+   * @returns {Boolean} Always returns true.
    */
   pass: function Expect_pass(aMessage) {
     return this._test(true, aMessage, undefined);
@@ -192,9 +146,8 @@ var Expect = Class.create(
   /**
    * Perform an always failing test
    *
-   * @param {string} aMessage
-   *   Message to show for the test result.
-   * @returns {boolean} Always returns false.
+   * @param {String} aMessage Message to show for the test result.
+   * @returns {Boolean} Always returns false.
    */
   fail: function Expect_fail(aMessage) {
     return this._test(false, aMessage, undefined);
@@ -203,11 +156,9 @@ var Expect = Class.create(
   /**
    * Test if the value pass
    *
-   * @param {boolean|string|number|object} aValue
-   *   Value to test.
-   * @param {string} aMessage
-   *   Message to show for the test result.
-   * @returns {boolean} Result of the test.
+   * @param {Boolean|String|Number|Object} aValue Value to test.
+   * @param {String} aMessage Message to show for the test result.
+   * @returns {Boolean} Result of the test.
    */
   ok: function Expect_ok(aValue, aMessage) {
     let condition = !!aValue;
@@ -219,13 +170,10 @@ var Expect = Class.create(
   /**
    * Test if both specified values are identical.
    *
-   * @param {boolean|string|number|object} aValue
-   *   Value to test.
-   * @param {boolean|string|number|object} aExpected
-   *   Value to strictly compare with.
-   * @param {string} aMessage
-   *   Message to show for the test result
-   * @returns {boolean} Result of the test.
+   * @param {Boolean|String|Number|Object} aValue Value to test.
+   * @param {Boolean|string|number|object} aExpected Value to strictly compare with.
+   * @param {String} aMessage Message to show for the test result
+   * @returns {Boolean} Result of the test.
    */
   equal: function Expect_equal(aValue, aExpected, aMessage) {
     let condition = (aValue === aExpected);
@@ -237,13 +185,10 @@ var Expect = Class.create(
   /**
    * Test if both specified values are not identical.
    *
-   * @param {boolean|string|number|object} aValue
-   *   Value to test.
-   * @param {boolean|string|number|object} aExpected
-   *   Value to strictly compare with.
-   * @param {string} aMessage
-   *   Message to show for the test result
-   * @returns {boolean} Result of the test.
+   * @param {Boolean|String|Number|Object} aValue Value to test.
+   * @param {Boolean|string|number|object} aExpected Value to strictly compare with.
+   * @param {String} aMessage Message to show for the test result
+   * @returns {Boolean} Result of the test.
    */
   notEqual: function Expect_notEqual(aValue, aExpected, aMessage) {
     let condition = (aValue !== aExpected);
@@ -255,13 +200,10 @@ var Expect = Class.create(
   /**
    * Test if the regular expression matches the string.
    *
-   * @param {string} aString
-   *   String to test.
-   * @param {RegEx} aRegex
-   *   Regular expression to use for testing that a match exists.
-   * @param {string} aMessage
-   *   Message to show for the test result
-   * @returns {boolean} Result of the test.
+   * @param {String} aString String to test.
+   * @param {RegEx} aRegex Regular expression to use for testing that a match exists.
+   * @param {String} aMessage Message to show for the test result
+   * @returns {Boolean} Result of the test.
    */
   match: function Expect_match(aString, aRegex, aMessage) {
     // XXX Bug 634948
@@ -287,13 +229,10 @@ var Expect = Class.create(
   /**
    * Test if the regular expression does not match the string.
    *
-   * @param {string} aString
-   *   String to test.
-   * @param {RegEx} aRegex
-   *   Regular expression to use for testing that a match does not exist.
-   * @param {string} aMessage
-   *   Message to show for the test result
-   * @returns {boolean} Result of the test.
+   * @param {String} aString String to test.
+   * @param {RegEx} aRegex Regular expression to use for testing that a match does not exist.
+   * @param {String} aMessage Message to show for the test result
+   * @returns {Boolean} Result of the test.
    */
   notMatch: function Expect_notMatch(aString, aRegex, aMessage) {
     // XXX Bug 634948
@@ -330,7 +269,7 @@ var Assert = Class.extend(Expect,
    * @constructs
    * @extends assertions.Expect
    * @requires errors.AssertionError
-   * @param {object} [aStartFrame=Components.stack]
+   * @param {Object} [aStartFrame=Components.stack]
    *   Frame of the stack to start from for the logging. Per default
    *   Components.stack should be used when creating an instance of that class.
    */
@@ -341,22 +280,16 @@ var Assert = Class.extend(Expect,
   /**
    * Log a test as failing by throwing an AssertionException.
    *
-   * @param {object} aResult
-   *   Test result details used for reporting.
-   *   <dl>
-   *     <dd>fileName</dd>
-   *     <dt>Name of the file in which the assertion failed.</dt>
-   *     <dd>function</dd>
-   *     <dt>Function in which the assertion failed.</dt>
-   *     <dd>lineNumber</dd>
-   *     <dt>Line number of the file in which the assertion failed.</dt>
-   *     <dd>message</dd>
-   *     <dt>Message why the assertion failed.</dt>
-   *   </dl>
+   * @param {Object} aResult Test result details used for reporting.
+   * @param {String} aResult.fileName Name of the file in which the assertion failed.
+   * @param {String} aResult.function Function in which the assertion failed.
+   * @param {Number} aResult.lineNumber Line number of the file in which the assertion failed.
+   * @param {String} aResult.message Message why the assertion failed.
    * @throws {AssertionError }
    */
   _logFail: function Assert__logFail(aResult) {
-    throw new AssertionError(aResult);
+    throw new AssertionError(aResult.message, aResult.fileName,
+                             aResult.lineNumber, aResult.function);
   }
 });
 

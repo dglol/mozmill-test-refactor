@@ -42,44 +42,50 @@ var errors = exports;
 
 
 /**
- * All methods for fatal assertions as implemented in assertions.Assert throw
- * an AssertionError as exception type if a test fails.
+ * Generator for custom error classes
  *
- * @class Error class which is used by Assert to raise an assertion exception.
- * @constructor
  * @memberOf errors
- * @see assertions.Assert
- * @param {object} aResult
- *   Test result details used for error reporting.
- *   <dl>
- *     <dd>fileName</dd>
- *     <dt>Name of the file in which the assertion failed.</dt>
- *     <dd>function</dd>
- *     <dt>Function in which the assertion failed.</dt>
- *     <dd>lineNumber</dd>
- *     <dt>Line number of the file in which the assertion failed.</dt>
- *     <dd>message</dd>
- *     <dt>Message why the assertion failed.</dt>
- *   </dl>
- * @returns {AssertionError} Instance of the AssertionError class.
+ * @param {String} aClassName Class name of the custom error
  */
-function AssertionError(aResult) {
-  let error = Object.create(AssertionError.prototype);
+function constructError(aClassName) {
+  var constructor = function(aMessage, aFileName, aLineNumber, aFunction) {
+    this.name = aClassName;
+    this.message = aMessage;
+    this.fileName = aFileName;
+    this.lineNumber = aLineNumber;
+    this.function = aFunction;
 
-  error.message = aResult.message;
-  error.fileName = aResult.fileName;
-  error.lineNumber = aResult.lineNumber;
-  error.function = aResult.function;
+    return this;
+  }
 
-  return error;
+  constructor.name = aClassName || Error.prototype.name;
+  constructor.prototype.toString = Error.prototype.toString;
+
+  return constructor;
 }
 
-AssertionError.prototype = Object.create(Error.prototype,
-{
-  constructor: { value: AssertionError },
-  name: { value: "AssertionError" }
-});
+
+/**
+ * Custom error for timeouts
+ *
+ * @class Timeout error
+ * @memberOf errors
+ * @param {String} aMessage Message to use for the error.
+ * @param {String} aFileName Name of the file where the error occured.
+ * @param {Number} aLineNumber Line number of the file where the error occured.
+ * @param {String} aFunction Function in which the the error occured.
+ */
+errors.TimeoutError = constructError("TimeoutError");
 
 
-// Export of classes
-errors.AssertionError = AssertionError;
+/**
+ * Custom error for fatal assertions
+ *
+ * @class Assertion error
+ * @memberOf errors
+ * @param {String} aMessage Message to use for the error.
+ * @param {String} aFileName Name of the file where the error occured.
+ * @param {Number} aLineNumber Line number of the file where the error occured.
+ * @param {String} aFunction Function in which the the error occured.
+ */
+errors.AssertionError = constructError("AssertionError");

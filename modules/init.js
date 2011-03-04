@@ -56,6 +56,15 @@
  */
 function testModule(aModule) {
   /**
+   * The Mozmill driver for handling global actions
+   *
+   * @name driver
+   * @type driver
+   * @memberOf module
+   */
+  aModule.driver = require("driver");
+
+  /**
    * Instance of the Assert class to execute tests with fatal assertions
    *
    * @name assert
@@ -74,15 +83,12 @@ function testModule(aModule) {
   aModule.expect = require("assertions").expect;
 
   /**
-   * Object with wrapper methods for back-end services
+   * Browser class which has to be used to handle browser windows
    *
-   * @name services
-   * @type services
+   * @name Browser
+   * @type browser.Browser
    * @memberOf module
    */
-  aModule.services = require("services");
-
-
   aModule.Browser = require("ui/browser");
   // Initialize the test module
   // XXX: Holding off on adding this until we're sure how we get the browser

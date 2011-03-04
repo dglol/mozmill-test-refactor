@@ -36,6 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 var init = require("../modules/init");
+var services = require("../modules/services");
 
 function setupModule(module) {
   init.testModule(module);

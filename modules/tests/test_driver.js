@@ -35,7 +35,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 var init = require("../init");
-var services = require("../services");
+var errors = require('../errors');
 
 function setupModule(module) {
   init.testModule(module);
@@ -43,11 +43,26 @@ function setupModule(module) {
 
 
 /**
- * Test if all wrapped back-end services are available
+ * Tests for synchronization related methods
  */
-function testServices() {
-  for (let service in services) {
-    let message = "Service '" + service + "' is available";
-    expect.ok(services[service], message);
+function testDriver() {
+  try {
+    driver.waitFor(function () {
+      return true;
+    }, undefined, 10, 100);
+  }
+  catch (ex) {
+    expect.fail("WaitFor has to pass if true is returned.");
+  }
+
+  try {
+    driver.waitFor(function () {
+      return false;
+    }, "Throws TimeoutError", 10, 100);
+    expect.fail("WaitFor has to fail if false is returned.");
+  }
+  catch (ex) {
+    expect.equal(ex.name, "TimeoutError", "exception is of type TimeoutError");
+    expect.equal(ex.message, "Throws TimeoutError", "The correct message has been set");
   }
 }
