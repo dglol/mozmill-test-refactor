@@ -47,6 +47,16 @@ var stackUtils = require('stack-utils');
 
 
 /**
+ * Pause the test execution for the given amount of time
+ *
+ * @memberOf driver
+ * @param {Number} aTimeout Time in milliseconds to wait
+ */
+function sleep(aTimeout) {
+  mozmill.utils.sleep(aTimeout);
+}
+
+/**
  * Wait until the given condition via the callback returns true.
  *
  * @memberOf driver
@@ -75,4 +85,5 @@ function waitFor(aCallback, aMessage, aTimeout, aInterval, aThisObject) {
 
 
 // Export of functions
+driver.sleep = sleep;
 driver.waitFor = waitFor;

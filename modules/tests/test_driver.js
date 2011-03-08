@@ -46,6 +46,10 @@ function setupModule(module) {
  * Tests for synchronization related methods
  */
 function testDriver() {
+  // Sleep for 100 milliseconds
+  driver.sleep(100);
+
+  // Test waitFor wrapper
   try {
     driver.waitFor(function () {
       return true;
