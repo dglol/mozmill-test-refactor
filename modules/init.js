@@ -89,10 +89,7 @@ function testModule(aModule) {
    * @type browser.Browser
    * @memberOf module
    */
-  aModule.Browser = require("ui/browser");
-  // Initialize the test module
-  // XXX: Holding off on adding this until we're sure how we get the browser
-  // module.browser = require("ui/browser").get();
+  aModule.Browser = require("ui/browser").Browser;
 }
 
 

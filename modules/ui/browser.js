@@ -35,38 +35,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var TabBar = require("tabbar");
-var NavBar = require("navbar");
-var Widgets = require("widgets");
-var Inheritance = require("../external/inheritance");
+var inheritance = require("../external/inheritance");
+var navBar = require("navbar");
+var tabBar = require("tabbar");
+var widgets = require("widgets");
 
-var get = function get(document) {
-  return new Browser(document);
-}
+var Browser = inheritance.Class.extend(widgets.Region, {
+  initialize: function Browser_initialize(aDocument) {
+    this.parent("tag", "#main-window", aDocument);
 
-var Browser = Inheritance.Class.extend(Widgets.XulRegion, {
-  initialize: function Browser_initialize(document) {
-    this.parent("tag", "#main-window", document);
-    
-    this.tabBar = new TabBar.TabBar(this);
-    this.navBar = new NavBar.NavBar(this);
+    this.tabBar = new tabBar.TabBar(this);
+    this.navBar = new navBar.NavBar(this);
   },
 
   // Original said this was part of tabs, but disagree. This will have to be
   // part of browser, because browser will be the class that has A) a link to
   // the navBar and B) a link to the tabs in order to check that the page
   // actually appeared after waitForPageLoad ends.
-  openUrl: function Browser_openUrl(text, timeout) {
-    this.navBar.urlBarText.type(text);
+  openURL: function Browser_openURL(aText, aTimeout) {
+    this.navBar.urlBarText.type(aText);
     this.navBar.urlBarText.keyPress("VK_RETURN");
-    this.waitForPageLoad(timeout);
+    this.waitForPageLoad(aTimeout);
     // XXX: should check after itself to see if page is actually loaded and
     // throw an error if not.
   },
-  
-  waitForPageLoad: function Browser_waitForPageLoad(timeout) {
-    this.controller.waitForPageLoad(timeout);
+
+  waitForPageLoad: function Browser_waitForPageLoad(aTimeout) {
+    this.controller.waitForPageLoad(aTimeout);
   }
 });
 
-exports.get = get;
+exports.Browser = Browser;

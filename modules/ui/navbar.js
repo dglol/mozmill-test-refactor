@@ -35,16 +35,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var Inheritance = require("../external/inheritance");
-var Widgets = require("widgets");
+var inheritance = require("../external/inheritance");
+var widgets = require("widgets");
 
-var NavBar = Inheritance.Class.extend(Widgets.XulRegion, {
-  initialize: function NavBar_initialize(owner) {
-    this.parent("tag", "#nav-bar", owner);
-    
-    this.homeButton = new Widgets.Button("tag", "#home-button", this);
-    this.urlBarText = new Widgets.TextBox("tag", "#urlbar", this);
-  }  
+var NavBar = inheritance.Class.extend(widgets.Region, {
+  initialize: function NavBar_initialize(aOwner) {
+    this.parent("tag", "#nav-bar", aOwner);
+
+    this.homeButton = new widgets.Button("tag", "#home-button", this);
+    this.urlBarText = new widgets.TextBox("tag", "#urlbar", this);
+  }
 });
 
 exports.NavBar = NavBar;

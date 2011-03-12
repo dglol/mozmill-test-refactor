@@ -44,7 +44,7 @@ var assertions = exports;
 // Include necessary modules
 const { Class } = require("external/inheritance");
 const { AssertionError } = require('errors');
-const { findCallerFrame } = require('stack-utils');
+const { findCallerFrame } = require('stack');
 
 
 // Use the frame module of Mozmill to raise non-fatal failures
@@ -67,7 +67,7 @@ var Expect = Class.create(
    *   specified, we walk down the stack until a frame with the same filename
    *   as the start frame has been found. The next file in the stack will be
    *   the frame to use for logging the result.
-   * @see stack-utils
+   * @see stack
    */
   initialize: function Expect_initialize(aStartFrame) {
     this._startFrame = aStartFrame;

@@ -43,7 +43,7 @@ var driver = exports;
 
 // Include necessary modules
 const { TimeoutError } = require('errors');
-var stackUtils = require('stack-utils');
+var stackUtils = require('stack');
 
 
 /**

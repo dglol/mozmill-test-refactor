@@ -38,15 +38,15 @@
 var init = require("../modules/init");
 var services = require("../modules/services");
 
-function setupModule(module) {
-  init.testModule(module);
-  browser = Browser.get();
+function setupModule(aModule) {
+  init.testModule(aModule);
+  browser = new Browser();
 }
 
 
 function testElements() {
   browser.navBar.homeButton.click();
-  browser.openUrl("https://addons.mozilla.org");
+  browser.openURL("https://addons.mozilla.org");
   
   browser.navBar.urlBarText.type("http://www.google.de");
   browser.navBar.urlBarText.keyPress("VK_RETURN");

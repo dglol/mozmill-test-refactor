@@ -35,38 +35,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var Inheritance = require("../external/inheritance");
-var Widgets = require("widgets");
-var DomUtils = require("../dom_utils");
+var dom = require("../dom");
+var inheritance = require("../external/inheritance");
+var widgets = require("widgets");
 
-var TabBar = Inheritance.Class.extend(Widgets.XulRegion, {
-  initialize: function TabBar_initialize(owner) {
-    this.parent("tag", "#TabsToolbar", owner);
-    
+var TabBar = inheritance.Class.extend(widgets.Region, {
+  initialize: function TabBar_initialize(aOwner) {
+    this.parent("tag", "#TabsToolbar", aOwner);
+
     this.tabs = new Tabs("tag", "#tabbrowser-tabs", this);
-  } 
+  }
 });
 
-var Tabs = Inheritance.Class.extend(Widgets.XulElement, {
+var Tabs = inheritance.Class.extend(widgets.Widget, {
   get items() {
-    var collector = new DomUtils.nodeCollector(this.node);
+    var collector = new dom.nodeCollector(this.node);
     collector.queryNodes(".tabbrowser-tab");
-    
+
     var tabElements = [];
     collector.nodes.forEach(function (node) {
       tabElements.push(new Tab("node", node, this));
     }, this);
-    
+
     return tabElements;
   }
-  
+
   // Intentionally leaving off length/at for the moment. Reason is that the
   // above process is slow enough that the best practice will be to just grab
   // all the rows into a separate var and deal with them from there. Using
   // length/at will cause a requery every time (and should, tabs are dynamic).
 });
 
-var Tab = Inheritance.Class.extend(Widgets.XulElement, {
+var Tab = inheritance.Class.extend(widgets.Widget, {
   /// XXX: stub
 });
 
