@@ -202,17 +202,6 @@ var Element = inheritance.Class.create(
   },
 
   /**
-   * The Mozmill controller object associated with this Element.
-   *
-   * @name controller
-   * @type controller
-   * @fieldOf widgets.Element#
-   */
-  get controller() {
-    return this._controller;
-  },
-
-  /**
    * The DOM window object associated with this Element.
    * @see <a href="https://developer.mozilla.org/en/DOM/window">MDC window reference</a>
    *
@@ -297,7 +286,7 @@ var Widget = inheritance.Class.extend(Element,
    * @returns {Boolean} true if succeeded, false otherwise.
    */
   click: function Widget_click(aLeft, aTop) {
-    return this.controller.click(this.elem, aLeft, aTop);
+    return this._controller.click(this.elem, aLeft, aTop);
   },
 
   /**
@@ -311,7 +300,7 @@ var Widget = inheritance.Class.extend(Element,
    * @returns {Boolean} true if succeeded, false otherwise.
    */
   doubleClick: function Widget_doubleClick(aLeft, aTop) {
-    return this.controller.click(this.elem, aLeft, aTop);
+    return this._controller.click(this.elem, aLeft, aTop);
   },
 
   /**
@@ -335,7 +324,7 @@ var Widget = inheritance.Class.extend(Element,
    */
   keyPress: function Widget_keypress(aKeyCode, aModifiers) {
     aModifiers = aModifiers || {};
-    return this.controller.keypress(this.elem, aKeyCode, aModifiers);
+    return this._controller.keypress(this.elem, aKeyCode, aModifiers);
   },
 
   /**
@@ -350,7 +339,7 @@ var Widget = inheritance.Class.extend(Element,
    * @returns {Boolean} true if succeeded, false otherwise.
    */
   mouseDown: function Widget_mouseDown(aButton, aLeft, aTop) {
-    return this.controller.mouseDown(this.elem, aButton, aLeft, aTop);
+    return this._controller.mouseDown(this.elem, aButton, aLeft, aTop);
   },
 
   /**
@@ -365,7 +354,7 @@ var Widget = inheritance.Class.extend(Element,
    * @returns {Boolean} true if succeeded, false otherwise.
    */
   mouseUp: function Widget_mouseUp(aButton, aLeft, Top) {
-    return this.controller.mouseUp(this.elem, aButton, aLeft, aTop);
+    return this._controller.mouseUp(this.elem, aButton, aLeft, aTop);
   },
 
   /**
@@ -379,7 +368,7 @@ var Widget = inheritance.Class.extend(Element,
    * @returns {Boolean} true if succeeded, false otherwise.
    */
   rightClick: function Widget_rightClick(aLeft, aTop) {
-    return this.controller.rightClick(this.elem, aLeft, aTop);
+    return this._controller.rightClick(this.elem, aLeft, aTop);
   }
 });
 
@@ -427,7 +416,7 @@ var TextBox = inheritance.Class.extend(Widget, {
   },
 
   type: function TextBox_type(aText) {
-    this.controller.type(this.elem, aText);
+    this._controller.type(this.elem, aText);
   }
 });
 
