@@ -319,7 +319,7 @@ var Widget = inheritance.Class.extend(Element,
    * @param {Boolean} [aModifiers.shiftKey=false] The Shift key.
    * @param {Boolean} [aModifiers.metaKey=false] The Meta/Cmd key.
    * @param {Boolean} [aModifiers.accelKey=false] Ctrl key on Windows/Linux,
-                                                 Cmd key on Mac.
+   *                                              Cmd key on Mac.
    * @return {Boolean} true if succeeded, false otherwise.
    */
   keyPress: function Widget_keypress(aKeyCode, aModifiers) {
@@ -369,6 +369,36 @@ var Widget = inheritance.Class.extend(Element,
    */
   rightClick: function Widget_rightClick(aLeft, aTop) {
     return this._controller.rightClick(this.elem, aLeft, aTop);
+  },
+
+  /**
+   * Synthesizes a mouse event on the given element
+   *
+   * @name mouseEvent
+   * @methodOf widgets.Widget#
+   *
+   * @param {Number} [aOffsetX=center] Relative x offset in the element's bounds
+   * @param {Number} [aOffsetY=center] Relative y offset in the element's bounds
+   * @param {Object} [aEvent={}] Information about the event
+   * @param {Boolean} [aEvent.ctrlKey=false] The Ctrl key.
+   * @param {Boolean} [aEvent.altKey=false] The Alt/Option key.
+   * @param {Boolean} [aEvent.shiftKey=false] The Shift key.
+   * @param {Boolean} [aEvent.metaKey=false] The Meta/Cmd key.
+   * @param {Boolean} [aEvent.accelKey=false] Ctrl key on Windows/Linux,
+   *                                          Cmd key on Mac.
+   * @param {Number} [aEvent.clickCount=1] Number of counts to click
+   * @param {String} [aEvent.type="mousedown" + "mouseup"] Type of the mouse event
+   *   <dl>
+   *   <dd>click</dd>     <dt>Click of the mouse button</dt>
+   *   <dd>mousedown</dd> <dt>Mouse button down</dt>
+   *   <dd>mouseup</dd>   <dt>Mouse button up</dt>
+   *   <dd>mouseover</dd> <dt>Mouse enters bounds</dt>
+   *   <dd>mouseout</dd>  <dt>Mouse leaves bounds</dt>
+   *   </dl>
+   */
+  mouseEvent: function Widget_mouseEvent(aOffsetX, aOffsetY, aEvent) {
+    aEvent = aEvent || {};
+    return this._controller.mouseEvent(aOffsetX, aOffsetY, aEvent);
   }
 });
 
