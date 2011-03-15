@@ -35,7 +35,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * @name assertions
  * @namespace Defines expect and assert methods to be used for assertions.
  */
 var assertions = exports;

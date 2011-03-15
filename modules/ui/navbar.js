@@ -35,6 +35,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var navBar = exports;
+
 var inheritance = require("../external/inheritance");
 var widgets = require("widgets");
 
@@ -47,4 +49,4 @@ var NavBar = inheritance.Class.extend(widgets.Region, {
   }
 });
 
-exports.NavBar = NavBar;
+navBar.NavBar = NavBar;

@@ -35,7 +35,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * @name stack
  * @namespace Defines utility methods for handling stack frames
  */
 var stack = exports;

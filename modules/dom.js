@@ -35,6 +35,11 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
+ * @namespace Defines nodeCollector, used to locate nodes within the DOM.
+ */
+var dom = exports;
+
+/**
  * Default constructor
  *
  * @param {object} aRoot
@@ -219,4 +224,4 @@ nodeCollector.prototype = {
   }
 }
 
-exports.nodeCollector = nodeCollector;
+dom.nodeCollector = nodeCollector;

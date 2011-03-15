@@ -36,10 +36,10 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * @name init
  * @namespace Helper methods for the general setup and teardown logic of tests
  *            and methods
  */
+var init = exports;
 
 /**
  * @name module
@@ -109,5 +109,5 @@ function uiModule(aModule) {
 
 
 // Export of methods
-exports.testModule = testModule;
-exports.uiModule = uiModule;
+init.testModule = testModule;
+init.uiModule = uiModule;

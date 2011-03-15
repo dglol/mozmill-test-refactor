@@ -35,7 +35,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * @name errors
  * @namespace Defines error classes to be used for exceptions.
  */
 var errors = exports;

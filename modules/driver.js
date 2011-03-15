@@ -35,7 +35,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * @name driver
  * @namespace Defines the Mozmill driver for global actions
  */
 var driver = exports;

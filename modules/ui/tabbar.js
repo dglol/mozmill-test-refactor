@@ -35,6 +35,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var tabBar = exports;
+
 var dom = require("../dom");
 var inheritance = require("../external/inheritance");
 var widgets = require("widgets");
@@ -70,4 +72,4 @@ var Tab = inheritance.Class.extend(widgets.Widget, {
   /// XXX: stub
 });
 
-exports.TabBar = TabBar;
+tabBar.TabBar = TabBar;

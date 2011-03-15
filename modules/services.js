@@ -36,7 +36,6 @@
 
 
 /**
- * @name services
  * @namespace Defines wrapper methods for back-end services
  */
 var services = exports;

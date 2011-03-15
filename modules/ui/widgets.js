@@ -36,9 +36,9 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * @name widgets
  * @namespace Defines proxy classes for creation of a hierarchical map
  */
+var widgets = exports;
 
 var inheritance = require("../external/inheritance");
 var dom = require("../dom");
@@ -475,14 +475,14 @@ var TextBox_Auto = inheritance.Class.extend(TextBox, {
 });
 
 // Exported Classes
-exports.Element = Element;
-exports.Widget = Widget;
-exports.Region = Region;
-exports.Button = Button;
-exports.TextBox = TextBox;
-exports.Button_Menu = Button_Menu;
-exports.Button_MenuButton = Button_MenuButton;
-exports.TextBox_Multi = TextBox_Multi;
-exports.TextBox_Number = TextBox_Number;
-exports.TextBox_Password = TextBox_Password;
-exports.TextBox_Auto = TextBox_Auto;
+widgets.Element = Element;
+widgets.Widget = Widget;
+widgets.Region = Region;
+widgets.Button = Button;
+widgets.TextBox = TextBox;
+widgets.Button_Menu = Button_Menu;
+widgets.Button_MenuButton = Button_MenuButton;
+widgets.TextBox_Multi = TextBox_Multi;
+widgets.TextBox_Number = TextBox_Number;
+widgets.TextBox_Password = TextBox_Password;
+widgets.TextBox_Auto = TextBox_Auto;

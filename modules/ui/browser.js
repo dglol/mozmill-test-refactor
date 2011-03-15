@@ -35,6 +35,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var browser = exports;
+
 var inheritance = require("../external/inheritance");
 var navBar = require("navbar");
 var tabBar = require("tabbar");
@@ -65,4 +67,4 @@ var Browser = inheritance.Class.extend(widgets.Region, {
   }
 });
 
-exports.Browser = Browser;
+browser.Browser = Browser;
