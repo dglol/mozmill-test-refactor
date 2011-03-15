@@ -61,7 +61,7 @@ var Browser = inheritance.Class.extend(widgets.Region, {
   },
 
   waitForPageLoad: function Browser_waitForPageLoad(aTimeout) {
-    this.controller.waitForPageLoad(aTimeout);
+    this._controller.waitForPageLoad(aTimeout);
   }
 });
 
