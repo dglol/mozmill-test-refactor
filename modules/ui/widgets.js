@@ -101,7 +101,7 @@ var Element = inheritance.Class.create(
         // We must be a top-level element. We sent in a document as owner.
         this._owner = undefined;
         this._document = aOwner;
-        this._controller = mozmill.controller.MozMillController(this._document.defaultView);
+        this._controller = new mozmill.controller.MozMillController(this._document.defaultView);
       }
     }
     else {
