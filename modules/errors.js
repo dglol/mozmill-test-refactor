@@ -66,6 +66,19 @@ function constructError(aClassName) {
 
 
 /**
+ * Custom error for fatal assertions
+ *
+ * @class Assertion error
+ * @memberOf errors
+ * @param {String} aMessage Message to use for the error.
+ * @param {String} aFileName Name of the file where the error occured.
+ * @param {Number} aLineNumber Line number of the file where the error occured.
+ * @param {String} aFunction Function in which the the error occured.
+ */
+errors.AssertionError = constructError("AssertionError");
+
+
+/**
  * Custom error for timeouts
  *
  * @class Timeout error
@@ -79,13 +92,26 @@ errors.TimeoutError = constructError("TimeoutError");
 
 
 /**
- * Custom error for fatal assertions
+ * Custom error for unkown entities
  *
- * @class Assertion error
+ * @class Unknown entity error
  * @memberOf errors
  * @param {String} aMessage Message to use for the error.
  * @param {String} aFileName Name of the file where the error occured.
  * @param {Number} aLineNumber Line number of the file where the error occured.
  * @param {String} aFunction Function in which the the error occured.
  */
-errors.AssertionError = constructError("AssertionError");
+errors.UnknownEntityError = constructError("UnknownEntityError");
+
+
+/**
+ * Custom error for unkown properties
+ *
+ * @class Unknown properties error
+ * @memberOf errors
+ * @param {String} aMessage Message to use for the error.
+ * @param {String} aFileName Name of the file where the error occured.
+ * @param {Number} aLineNumber Line number of the file where the error occured.
+ * @param {String} aFunction Function in which the the error occured.
+ */
+errors.UnknownPropertyError = constructError("UnknownPropertyError");
