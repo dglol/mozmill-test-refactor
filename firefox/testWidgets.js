@@ -29,7 +29,7 @@ function testGetElementWithDoc() {
 
 function testNavBar() {
   // get the nav bar
-  var myNavBar = new navBar.NavBar();
+  var myNavBar = new navBar.NavBar("tag", "#nav-bar");
   dump("navBar ID: " + myNavBar.node.id + "\n");
   dump("navBar.homeButton ID: " + myNavBar.homeButton.node.id + "\n");
   dump("navBar.urlBarText ID: " + myNavBar.urlBarText.node.id + "\n");

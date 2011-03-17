@@ -42,8 +42,8 @@ var inheritance = require("../external/inheritance");
 var widgets = require("widgets");
 
 var TabBar = inheritance.Class.extend(widgets.Region, {
-  initialize: function TabBar_initialize(aOwner) {
-    this.parent("tag", "#TabsToolbar", aOwner);
+  initialize: function TabBar_initialize(aLocatorType, aLocator, aOwner) {
+    this.parent(aLocatorType, aLocator, aOwner);
 
     this.tabs = new Tabs("tag", "#tabbrowser-tabs", this);
   }

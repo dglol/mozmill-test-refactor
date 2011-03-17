@@ -41,8 +41,8 @@ var inheritance = require("../external/inheritance");
 var widgets = require("widgets");
 
 var NavBar = inheritance.Class.extend(widgets.Region, {
-  initialize: function NavBar_initialize(aOwner) {
-    this.parent("tag", "#nav-bar", aOwner);
+  initialize: function NavBar_initialize(aLocatorType, aLocator, aOwner) {
+    this.parent(aLocatorType, aLocator, aOwner);
 
     this.homeButton = new widgets.Button("tag", "#home-button", this);
     this.urlBarText = new widgets.TextBox("tag", "#urlbar", this);

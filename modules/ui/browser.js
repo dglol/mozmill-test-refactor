@@ -46,8 +46,8 @@ var Browser = inheritance.Class.extend(widgets.Region, {
   initialize: function Browser_initialize(aDocument) {
     this.parent("tag", "#main-window", aDocument);
 
-    this.tabBar = new tabBar.TabBar(this);
-    this.navBar = new navBar.NavBar(this);
+    this.tabBar = new tabBar.TabBar("tag", "#TabsToolbar", this);
+    this.navBar = new navBar.NavBar("tag", "#nav-bar", this);
   },
 
   // Original said this was part of tabs, but disagree. This will have to be
