@@ -49,7 +49,7 @@ var dom = require("../dom");
 const ELEM_WAIT_TIME = 5000;
 
 var Element = inheritance.Class.create(
-/** @lends widgets.Element */
+/** @lends widgets.Element.prototype */
 {
   /**
    * Element is a proxy for an element of a DOM. It defines the core binding
@@ -59,7 +59,6 @@ var Element = inheritance.Class.create(
    *
    * @class A proxy for an element of a DOM
    * @constructs
-   * @memberOf widgets
    *
    * @param {String} aLocatorType
    *   The type of locator being supplied. Choices are:
@@ -242,7 +241,7 @@ var Element = inheritance.Class.create(
 });
 
 var Widget = inheritance.Class.extend(Element,
-/** @lends widgets.Widget */
+/** @lends widgets.Widget.prototype */
 {
   /**
    * Widget is an Element that corresponds to a visual control of an
@@ -251,7 +250,6 @@ var Widget = inheritance.Class.extend(Element,
    *
    * @class An Element that corresponds to an element of an HTML or Chrome document
    * @constructs
-   * @memberOf widgets
    * @extends widgets.Element
    *
    * @param {String} aLocatorType
@@ -278,9 +276,6 @@ var Widget = inheritance.Class.extend(Element,
   /**
    * Clicks on the Element with the left mouse button.
    *
-   * @name click
-   * @methodOf widgets.Widget#
-   *
    * @param {Number} [aLeft=center] Relative horizontal coordinate inside Element.
    * @param {Number} [aTop=center] Relative vertical coordinate inside Element.
    * @returns {Boolean} true if succeeded, false otherwise.
@@ -291,9 +286,6 @@ var Widget = inheritance.Class.extend(Element,
 
   /**
    * Double-clicks on the Element with the left mouse button.
-   *
-   * @name doubleClick
-   * @methodOf widgets.Widget#
    *
    * @param {Number} [aLeft=center] Relative horizontal coordinate inside Element.
    * @param {Number} [aTop=center] Relative vertical coordinate inside Element.
@@ -308,9 +300,6 @@ var Widget = inheritance.Class.extend(Element,
    * Try to avoid the usage of the ctrlKey and metaKey modifiers if the
    * shortcut is a combination of Ctrl (Windows/Linux) and Cmd (Mac). In
    * this case, use accelKey instead which will work across operating systems.
-   *
-   * @name keyPress
-   * @methodOf widgets.Widget#
    *
    * @param {String} aKeyCode Either a literal like 'b' or an enum like 'VK_ESCAPE'.
    * @param {Object} [aModifiers={}] Indicates modifier keys. true means pressed.
@@ -330,9 +319,6 @@ var Widget = inheritance.Class.extend(Element,
   /**
    * Presses the selected mouse button down on the Element.
    *
-   * @name mouseDown
-   * @methodOf widgets.Widget#
-   *
    * @param {Number} [aButton=0] The id of the button to press (0 - left, 1 - middle, 2 - right).
    * @param {Number} [aLeft=center] Relative horizontal coordinate inside Element.
    * @param {Number} [aTop=center] Relative vertical coordinate inside Element.
@@ -344,9 +330,6 @@ var Widget = inheritance.Class.extend(Element,
 
   /**
    * Releases the selected mouse button on the Element.
-   *
-   * @name mouseUp
-   * @methodOf widgets.Widget#
    *
    * @param {Number} [aButton=0] The id of the button to press (0 - left, 1 - middle, 2 - right).
    * @param {Number} [aLeft=center] Relative horizontal coordinate inside Element.
@@ -360,9 +343,6 @@ var Widget = inheritance.Class.extend(Element,
   /**
    * Clicks on the Element with the right mouse button.
    *
-   * @name rightClick
-   * @methodOf widgets.Widget#
-   *
    * @param {Number} [aLeft=center] Relative horizontal coordinate inside Element.
    * @param {Number} [aTop=center] Relative vertical coordinate inside Element.
    * @returns {Boolean} true if succeeded, false otherwise.
@@ -373,9 +353,6 @@ var Widget = inheritance.Class.extend(Element,
 
   /**
    * Synthesizes a mouse event on the given element
-   *
-   * @name mouseEvent
-   * @methodOf widgets.Widget#
    *
    * @param {Number} [aOffsetX=center] Relative x offset in the element's bounds
    * @param {Number} [aOffsetY=center] Relative y offset in the element's bounds
@@ -411,7 +388,6 @@ var Region = inheritance.Class.extend(Widget,
    *
    * @class An Element that corresponds to a grouping container in a Chrome document.
    * @constructs
-   * @memberOf widgets
    * @extends widgets.Widget
    *
    * @param {String} aLocatorType
