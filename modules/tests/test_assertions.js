@@ -102,7 +102,7 @@ function setupModule(module) {
  * Tests for supported expect methods
  */
 function testExpect() {
-  for each (var test in TEST_DATA) {
+  for each (let test in TEST_DATA) {
     let message = "except." + test.fun + " for [" +
                   test.params.join(", ") + "]";
 

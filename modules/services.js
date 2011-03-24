@@ -227,14 +227,10 @@ services.perms = Services.perms;
  * Service to access preferences
  *
  * @see <a href="http://mxr.mozilla.org/mozilla-central/source/modules/libpref/public/nsIPrefService.idl">nsIPrefService</a>
+ * @see <a href="http://mxr.mozilla.org/mozilla-central/source/modules/libpref/public/nsIPrefBranch.idl">nsIPrefBranch</a>
+ * @see <a href="http://mxr.mozilla.org/mozilla-central/source/modules/libpref/public/nsIPrefBranch2.idl">nsIPrefBranch2</a>
  */
-// XXX: We can't use the native prefs service yet because it QI to nsIPrefBranch2
-// and our preferences module doesn't support it
-// services.prefs = Services.prefs;
-XPCOMUtils.defineLazyGetter(services, "prefs", function () {
-  return Cc["@mozilla.org/preferences-service;1"].
-         getService(Ci.nsIPrefService);
-});
+services.prefs = Services.prefs;
 
 
 /**
