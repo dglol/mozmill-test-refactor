@@ -43,7 +43,7 @@ var l10n = exports;
 
 // Include necessary modules
 const { UnknownEntityError, UnknownPropertyError } = require('errors');
-var stackUtils = require('stack-utils');
+var stack = require('stack');
 
 
 /**
@@ -76,7 +76,7 @@ function getEntity(aDTDs, aEntityId) {
   var node = doc.querySelector('elem[id="entity"]');
 
   if (!node) {
-    let frame = stackUtils.findCallerFrame(Components.stack);
+    let frame = stack.findCallerFrame(Components.stack);
     let filename = frame.filename.replace(/(.*)-> /, "");
     let message = "Unkown entity '" + aEntityId + "'";
 
@@ -105,7 +105,7 @@ function getProperty(aURL, aProperty) {
     return bundle.GetStringFromName(aProperty);
   }
   catch (ex) {
-    let frame = stackUtils.findCallerFrame(Components.stack);
+    let frame = stack.findCallerFrame(Components.stack);
     let filename = frame.filename.replace(/(.*)-> /, "");
     let message = "Unkown property '" + aProperty + "'";
 

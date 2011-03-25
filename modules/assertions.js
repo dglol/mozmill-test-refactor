@@ -61,20 +61,14 @@ var Expect = Class.create(
    *
    * @class Base class for non-fatal assertions
    * @constructs
-   * @param {Object} [aStartFrame=Components.stack]
-   *   Frame to use for logging the test result. If a start frame has been
-   *   specified, we walk down the stack until a frame with the same filename
-   *   as the start frame has been found. The next file in the stack will be
-   *   the frame to use for logging the result.
-   * @see stack
    */
-  initialize: function Expect_initialize(aStartFrame) {
-    this._startFrame = aStartFrame;
+  initialize: function Expect_initialize() {
   },
 
   /**
    * Log a test as failing by adding a fail frame.
    *
+   * @private
    * @param {Object} aResult Test result details used for reporting.
    * @param {String} aResult.fileName Name of the file in which the assertion failed.
    * @param {String} aResult.function Function in which the assertion failed.
@@ -88,6 +82,7 @@ var Expect = Class.create(
   /**
    * Log a test as passing by adding a pass frame.
    *
+   * @private
    * @param {Object} aResult Test result details used for reporting.
    * @param {String} aResult.fileName Name of the file in which the assertion failed.
    * @param {String} aResult.function Function in which the assertion failed.
@@ -101,20 +96,21 @@ var Expect = Class.create(
   /**
    * Test the condition and mark test as passed or failed
    *
+   * @private
    * @param {Boolean} aCondition Condition to test.
-   * @param {String} aMessage Message to show for the test result
-   * @param {String} aDiagnosis Diagnose message to show for the test result
+   * @param {String} [aMessage] Message to show for the test result
+   * @param {String} [aDiagnosis] Diagnose message to show for the test result
    * @returns {Boolean} Result of the test.
    */
   _test: function Expect__test(aCondition, aMessage, aDiagnosis) {
     let diagnosis = aDiagnosis || "";
     let message = aMessage || "";
 
-    if (aDiagnosis)
-      message = aMessage ? message + " - " + aDiagnosis : aDiagnosis;
+    if (diagnosis)
+      message = message ? message + " - " + diagnosis : diagnosis;
 
     // Build result data
-    let frame = findCallerFrame(this._startFrame);
+    let frame = findCallerFrame(Components.stack);
 
     let result = {
       'fileName'   : frame.filename.replace(/(.*)-> /, ""),
@@ -268,17 +264,15 @@ var Assert = Class.extend(Expect,
    * @constructs
    * @extends assertions.Expect
    * @requires errors.AssertionError
-   * @param {Object} [aStartFrame=Components.stack]
-   *   Frame of the stack to start from for the logging. Per default
-   *   Components.stack should be used when creating an instance of that class.
    */
-  initialize: function Assert(aStartFrame) {
-    this.parent(aStartFrame);
+  initialize: function Assert() {
+    this.parent();
   },
 
   /**
    * Log a test as failing by throwing an AssertionException.
    *
+   * @private
    * @param {Object} aResult Test result details used for reporting.
    * @param {String} aResult.fileName Name of the file in which the assertion failed.
    * @param {String} aResult.function Function in which the assertion failed.
@@ -292,10 +286,6 @@ var Assert = Class.extend(Expect,
   }
 });
 
-
-// Export of variables
-assertions.expect = new Expect(Components.stack);
-assertions.assert = new Assert(Components.stack);
 
 // Export of classes
 assertions.Expect = Expect;

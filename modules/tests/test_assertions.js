@@ -76,8 +76,8 @@ const TEST_DATA = [
  * Soft expect class for assertions which should not add failing and passing frames
  */
 var SoftExpect = Class.extend(Expect, {
-  initialize: function SoftExpect(aStartFrame) {
-    this.parent(aStartFrame);
+  initialize: function SoftExpect() {
+    this.parent();
   },
 
   _logPass: function SoftExpect__logPass(aResult) {

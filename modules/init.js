@@ -35,6 +35,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+
+// Include necessary modules
+var assertions = require("assertions");
+
+
 /**
  * @namespace Helper methods for the general setup and teardown logic of tests
  *            and methods
@@ -71,7 +76,7 @@ function testModule(aModule) {
    * @type assertions.Assert
    * @memberOf module
    */
-  aModule.assert = require("assertions").assert;
+  aModule.assert = new assertions.Assert();
 
   /**
    * Instance of the Expect class to execute tests with non-fatal assertions
@@ -80,7 +85,7 @@ function testModule(aModule) {
    * @type assertions.Expect
    * @memberOf module
    */
-  aModule.expect = require("assertions").expect;
+  aModule.expect = new assertions.Expect();
 
   /**
    * Browser class which has to be used to handle browser windows
