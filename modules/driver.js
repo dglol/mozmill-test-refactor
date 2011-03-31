@@ -41,8 +41,35 @@ var driver = exports;
 
 
 // Include necessary modules
-const { TimeoutError } = require('errors');
+var errors  = require('errors');
+var services = require('services');
 var stackUtils = require('stack');
+
+var windows = require('ui/windows');
+
+
+/**
+ *
+ */
+function getBrowserWindow() {
+  let win = getMostRecentWindow(windows.filterWindowByType, "navigator:browser");
+
+  if (!win)
+    return newBrowserWindow();
+
+  return new windows.Window(win);
+}
+
+
+/**
+ *
+ */
+function newBrowserWindow() {
+  let hWindow = Cc["@mozilla.org/appshell/appShellService;1"].
+                getService(Ci.nsIAppShellService).
+                hiddenDOMWindow;
+  return new windows.Window(hWindow.OpenBrowserWindow());
+}
 
 
 /**
@@ -64,7 +91,7 @@ function sleep(aTimeout) {
  * @param {Number} [aTimeout=5000] Number of milliseconds until a timeout occurs
  * @param {Number} [aInterval=100] Number of milliseconds between each iteration
  * @param {Object} [aThisObject] Reference to the object this references
- * @throws {TimeoutError}
+ * @throws {errors.TimeoutError}
  */
 function waitFor(aCallback, aMessage, aTimeout, aInterval, aThisObject) {
   // XXX Bug 637941
@@ -78,11 +105,163 @@ function waitFor(aCallback, aMessage, aTimeout, aInterval, aThisObject) {
     let frame = stackUtils.findCallerFrame(Components.stack);
     let filename = frame.filename.replace(/(.*)-> /, "");
 
-    throw new TimeoutError(aMessage, filename, frame.lineNumber, frame.name);
+    throw new errors.TimeoutError(aMessage, filename, frame.lineNumber, frame.name);
   }
 }
 
 
+
+/**
+ * Internal method to retrieve a DOM window by a given sorting order and type.
+ *
+ * @private
+ * @param {Function} aWindowCallback Function which retrieves a list of windows.
+ * @param {Function} [aFilterCallback] Function which is used to filter windows.
+ * @param {Object} [aValue] Value to pass to the filter function.
+ *
+ * @returns {DOMWindow} The window found.
+ */
+function _getWindow(aWindowCallback, aFilterCallback, aValue) {
+  let windows;
+
+  if (aFilterCallback) {
+    windows = aWindowCallback(function (window) {
+      return aFilterCallback(window, aValue);
+    });
+  }
+  else {
+    windows = aWindowCallback();
+  }
+
+  return windows.length ? windows[0] : null;
+}
+
+
+/**
+ * Internal method to retrieve a list of DOM windows by a given sorting order
+ * and filter.
+ *
+ * @private
+ * @param {nsISimpleEnumerator} aEnumerator Window enumerator to use.
+ * @param {Function} [aFilterCallback] Function which is used to filter windows.
+ *
+ * @returns {DOMWindow[]} The windows found.
+ */
+function _getWindows(aEnumerator, aFilterCallback) {
+  let windows = [];
+
+  while (aEnumerator.hasMoreElements()) {
+    let window = aEnumerator.getNext();
+
+    if (!aFilterCallback || aFilterCallback(window)) {
+      windows.push(window);
+    }
+  }
+
+  return windows.reverse();
+}
+
+
+/**
+ * Callback to filter entries in a window list by method
+ *
+ * @param {DOMWindow} aWindow Window to check.
+ * @param {String} aName Name of the window.
+ *
+ * @returns {Boolean} True if the condition is met.
+ */
+function filterWindowByMethod(aWindow, aName) {
+  return (aName in aWindow);
+}
+
+
+/**
+ * Callback to filter entries in a window list by window title
+ *
+ * @param {DOMWindow} aWindow Window to check.
+ * @param {String} aTitle Title of the window.
+ *
+ * @returns {Boolean} True if the condition is met.
+ */
+function filterWindowByTitle(aWindow, aTitle) {
+  return (aWindow.document.title === aTitle);
+}
+
+
+/**
+ * Callback to filter entries in a window list by window type
+ *
+ * @param {DOMWindow} aWindow Window to check.
+ * @param {String} aType Type of the window.
+ *
+ * @returns {Boolean} True if the condition is met.
+ */
+function filterWindowByType(aWindow, aType) {
+  return (aWindow.document.documentElement.getAttribute("windowtype") === aType);
+}
+
+
+/**
+ * Retrieves a sorted list of open windows based on their age (newest to oldest).
+ *
+ * @param {Function} [aFilterCallback] Function which is used to filter windows.
+ *
+ * @returns {DOMWindow[]} List of windows.
+ */
+function getLastOpenedWindows(aFilterCallback) {
+  return _getWindows(services.wm.getEnumerator(""), aFilterCallback);
+}
+
+
+/**
+ * Retrieves a sorted list of open windows based on their z order (most recent first).
+ *
+ * @param {Function} [aFilterCallback] Function which is used to filter windows.
+ *
+ * @returns {DOMWindow[]} List of windows.
+ */
+function getMostRecentWindows(aFilterCallback) {
+  return _getWindows(services.wm.getZOrderDOMWindowEnumerator("", false),
+                     aFilterCallback);
+}
+
+
+/**
+ * Retrieves the last opened window.
+ *
+ * @param {Function} [aFilterCallback] Function which is used to filter windows.
+ * @param {Object} [aValue] Value to pass to the filter function.
+ *
+ * @returns {DOMWindow} The window.
+ */
+function getLastOpenedWindow(aFilterCallback, aValue) {
+  return _getWindow(getLastOpenedWindows, aFilterCallback, aValue);
+}
+
+/**
+ * Retrieves the most recent window.
+ *
+ * @param {Function} [aFilterCallback] Function which is used to filter windows.
+ * @param {Object} [aValue] Value to pass to the filter function.
+ *
+ * @returns {DOMWindow} The window.
+ */
+function getMostRecentWindow(aFilterCallback, aValue) {
+  return _getWindow(getMostRecentWindows, aFilterCallback, aValue);
+}
+
+
 // Export of functions
+driver.getBrowserWindow = getBrowserWindow;
+driver.newBrowserWindow = newBrowserWindow;
 driver.sleep = sleep;
 driver.waitFor = waitFor;
+
+driver.filterWindowByMethod = filterWindowByMethod;
+driver.filterWindowByTitle = filterWindowByTitle;
+driver.filterWindowByType = filterWindowByType;
+
+driver.getLastOpenedWindow = getLastOpenedWindow;
+driver.getLastOpenedWindows = getLastOpenedWindows;
+driver.getMostRecentWindow = getMostRecentWindow;
+driver.getMostRecentWindows = getMostRecentWindows;
