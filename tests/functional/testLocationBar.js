@@ -35,41 +35,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var tabBar = exports;
+var init = require("../../lib/init");
+var services = require("../../lib/services");
 
-var dom = require("../dom");
-var inheritance = require("../external/inheritance");
-var widgets = require("widgets");
+function setupModule(aModule) {
+  init.testModule(aModule);
+  browser = new Browser();
+}
 
-var TabBar = inheritance.Class.extend(widgets.Region, {
-  initialize: function TabBar_initialize(aLocatorType, aLocator, aOwner) {
-    this.parent(aLocatorType, aLocator, aOwner);
 
-    this.tabs = new Tabs("tag", "#tabbrowser-tabs", this);
-  }
-});
+function testElements() {
+  browser.navBar.homeButton.click();
+  browser.openURL("https://addons.mozilla.org");
+  
+  browser.navBar.urlBarText.type("http://www.google.de");
+  browser.navBar.urlBarText.keyPress("VK_RETURN");
+  browser.waitForPageLoad();
 
-var Tabs = inheritance.Class.extend(widgets.Widget, {
-  get items() {
-    var collector = new dom.nodeCollector(this.node);
-    collector.queryNodes(".tabbrowser-tab");
+  expect.match(browser.navBar.urlBarText.getText(), /google/);
+  expect.notMatch(browser.navBar.urlBarText.getText(), /mozilla/);
 
-    var tabElements = [];
-    collector.nodes.forEach(function (node) {
-      tabElements.push(new Tab("node", node, this));
-    }, this);
+  var count = services.session.getClosedWindowCount(browser.window);
+  expect.equal(count, 0, "No windows are in the undo stack");
 
-    return tabElements;
-  }
-
-  // Intentionally leaving off length/at for the moment. Reason is that the
-  // above process is slow enough that the best practice will be to just grab
-  // all the rows into a separate var and deal with them from there. Using
-  // length/at will cause a requery every time (and should, tabs are dynamic).
-});
-
-var Tab = inheritance.Class.extend(widgets.Widget, {
-  /// XXX: stub
-});
-
-tabBar.TabBar = TabBar;
+  var tabItems = browser.tabBar.tabs.items;
+  expect.equal(tabItems[1].node.tagName, "tab", "Entry is a tab");
+}
