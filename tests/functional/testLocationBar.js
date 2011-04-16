@@ -40,7 +40,6 @@ var services = require("../../lib/services");
 
 function setupModule(aModule) {
   init.testModule(aModule);
-  browser = new Browser();
 }
 
 
