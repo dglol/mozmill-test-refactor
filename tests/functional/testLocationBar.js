@@ -19,6 +19,7 @@
  *
  * Contributor(s):
  *   Henrik Skupin <hskupin@mozilla.com>
+ *   Geo Mealer <gmealer@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -33,23 +34,30 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-var Services = require("../../modules/services");
 
-function setupModule(module) {
-  require("../../modules/init").head(module);
+var init = require("../../lib/init");
+var services = require("../../lib/services");
+
+function setupModule(aModule) {
+  init.testModule(aModule);
+  browser = new Browser();
 }
 
-function testElements() {
-  browser.navbar.home.click();
-  browser.openURL("https://addons.mozilla.org");
 
-  browser.navbar.locationbar.type("http://www.google.de");
-  browser.navbar.locationbar.keypress("VK_RETURN", {});
+function testElements() {
+  browser.navBar.homeButton.click();
+  browser.openURL("https://addons.mozilla.org");
+  
+  browser.navBar.urlBarText.type("http://www.google.de");
+  browser.navBar.urlBarText.keyPress("VK_RETURN");
   browser.waitForPageLoad();
 
-  var count = Services.sessionStore.getClosedWindowCount(browser.window);
-  assert.is(count, 0, "There should be no window in the undo stack");
+  expect.match(browser.navBar.urlBarText.getText(), /google/);
+  expect.notMatch(browser.navBar.urlBarText.getText(), /mozilla/);
 
-  assert.is(browser.tabbar.tabs.at(1).tagName, "tab", "Entry is a tab");
+  var count = services.session.getClosedWindowCount(browser.window);
+  expect.equal(count, 0, "No windows are in the undo stack");
+
+  var tabItems = browser.tabBar.tabs.items;
+  expect.equal(tabItems[1].node.tagName, "tab", "Entry is a tab");
 }

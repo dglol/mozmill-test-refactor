@@ -1,5 +1,5 @@
-var widgets = require("../modules/ui/widgets");
-var navBar = require("../modules/ui/navbar");
+var widgets = require("../../lib/ui/widgets");
+var navBar = require("../../lib/ui/navbar");
 
 function testGetElement() {
   // get a single element, access its node, and dump it to console.
