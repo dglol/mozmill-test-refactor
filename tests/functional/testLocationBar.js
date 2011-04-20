@@ -44,19 +44,19 @@ function setupModule(aModule) {
 
 
 function testElements() {
-  browser.navBar.homeButton.click();
+  browser.ui.navBar.homeButton.click();
   browser.openURL("https://addons.mozilla.org");
-  
-  browser.navBar.urlBarText.type("http://www.google.de");
-  browser.navBar.urlBarText.keyPress("VK_RETURN");
+
+  browser.ui.navBar.urlBarText.type("http://www.google.de");
+  browser.ui.navBar.urlBarText.keyPress("VK_RETURN");
   browser.waitForPageLoad();
 
-  expect.match(browser.navBar.urlBarText.getText(), /google/);
-  expect.notMatch(browser.navBar.urlBarText.getText(), /mozilla/);
+  expect.match(browser.ui.navBar.urlBarText.getText(), /google/);
+  expect.notMatch(browser.ui.navBar.urlBarText.getText(), /mozilla/);
 
   var count = services.session.getClosedWindowCount(browser.window);
   expect.equal(count, 0, "No windows are in the undo stack");
 
-  var tabItems = browser.tabBar.tabs.items;
+  var tabItems = browser.ui.tabBar.tabs.items;
   expect.equal(tabItems[1].node.tagName, "tab", "Entry is a tab");
 }
