@@ -57,21 +57,20 @@ function setupModule(aModule) {
  */
 function testBackAndForward() {
   // Open up the list of local pages statically assigned in the array
-  for each (var localPage in LOCAL_TEST_PAGES) {
+  LOCAL_TEST_PAGES.forEach(function (localPage) {
     browser.openURL(localPage.url);
-
-    var element = new widgets.Element("id", localPage.id, browser.tabs.activeTab);
-    assert.ok(element.isValid, "element is valid")
-  }
+    var element = new widgets.Element("id", localPage.id, browser.content.activeTab);
+    assert.ok(element.exists, "element exists")
+  });
 
   // Click on the Back button for the number of local pages visited
   for (var i = LOCAL_TEST_PAGES.length - 2; i >= 0; i--) {
     browser.navBar.backButton.click();
 
-    var element = new widgets.Element("id", LOCAL_TEST_PAGES[i].id, browser.tabs.activeTab);
+    var element = new widgets.Element("id", LOCAL_TEST_PAGES[i].id, browser.content.activeTab);
     // Wait for node to be present -- will go away with implicit wait, replace with assert then
     driver.waitFor(function () {
-      return element.isValid;
+      return element.exists;
     });
   }
 
@@ -79,10 +78,10 @@ function testBackAndForward() {
   for (var j = 1; j < LOCAL_TEST_PAGES.length; j++) {
     browser.navBar.forwardButton.click();
 
-    var element = new widgets.Element("id", LOCAL_TEST_PAGES[j].id, browser.tabs.activeTab);
+    var element = new widgets.Element("id", LOCAL_TEST_PAGES[j].id, browser.content.activeTab);
     // Wait for node to be present -- will go away with implicit wait, replace with assert then
     driver.waitFor(function () {
-      return element.isValid;
+      return element.exists;
     });
   }
 }
