@@ -47,7 +47,7 @@ function setupModule(aModule) {
 function testElements() {
   browser.navBar.homeButton.click();
   browser.openURL("https://addons.mozilla.org");
-  
+
   browser.navBar.urlBarText.type("http://www.google.de");
   browser.navBar.urlBarText.keyPress("VK_RETURN");
   browser.waitForPageLoad();
