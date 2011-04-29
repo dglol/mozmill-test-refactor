@@ -58,5 +58,5 @@ function testElements() {
   expect.equal(count, 0, "No windows are in the undo stack");
 
   var tabItems = browser.ui.tabBar.tabs.items;
-  expect.equal(tabItems[1].node.tagName, "tab", "Entry is a tab");
+  expect.equal(tabItems[0].node.tagName, "tab", "Entry is a tab");
 }
