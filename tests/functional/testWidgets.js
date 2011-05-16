@@ -1,4 +1,4 @@
- var widgets = require("../../lib/ui/widgets");
+var widgets = require("../../lib/ui/widgets");
 var navBar = require("../../lib/mixins/browser/navbar");
 
 function testGetElement() {

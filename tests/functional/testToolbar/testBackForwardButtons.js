@@ -37,7 +37,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var init = require("../../../lib/init");
+var head = require("../../../lib/init");
 var widgets = require("../../../lib/ui/widgets");
 
 const LOCAL_TEST_FOLDER = collector.addHttpResource('../../../data/');
@@ -47,9 +47,16 @@ const LOCAL_TEST_PAGES = [
   {url: LOCAL_TEST_FOLDER + 'layout/mozilla_grants.html', id: 'accessibility'}
 ];
 
+
 function setupModule(aModule) {
-  init.testModule(aModule);
+  head.setup(aModule);
 }
+
+
+function teardownModule(module) {
+  head.teardown(module);
+}
+
 
 /**
  * Test the back and forward buttons

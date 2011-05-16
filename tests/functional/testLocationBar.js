@@ -35,11 +35,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var init = require("../../lib/init");
+var head = require("../../lib/init");
 var services = require("../../lib/services");
 
+
 function setupModule(aModule) {
-  init.testModule(aModule);
+  head.setup(aModule);
+}
+
+
+function teardownModule(module) {
+  head.teardown(module);
 }
 
 
@@ -48,7 +54,7 @@ function testElements() {
   browser.openURL("https://addons.mozilla.org");
 
   browser.ui.navBar.urlBarText.type("http://www.google.de");
-  browser.ui.navBar.urlBarText.keyPress("VK_RETURN");
+  browser.ui.navBar.urlBarText.keypress("VK_RETURN");
   browser.waitForPageLoad();
 
   expect.match(browser.ui.navBar.urlBarText.getText(), /google/);
