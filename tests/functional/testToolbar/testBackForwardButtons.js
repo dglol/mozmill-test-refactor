@@ -37,7 +37,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var head = require("../../../lib/init");
+var head = require("../../../lib/head");
 var widgets = require("../../../lib/ui/widgets");
 
 const LOCAL_TEST_FOLDER = collector.addHttpResource('../../../data/');

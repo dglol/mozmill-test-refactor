@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var head = require("../../lib/init");
+var head = require("../../lib/head");
 var services = require("../../lib/services");
 
 
