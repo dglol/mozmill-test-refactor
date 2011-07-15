@@ -1,5 +1,5 @@
 var widgets = require("../../lib/ui/widgets");
-var navBar = require("../../lib/mixins/browser/navbar");
+var navBar = require("../../lib/ui/browser/navbar");
 
 function testGetElement() {
   // get a single element, access its node, and dump it to console.
