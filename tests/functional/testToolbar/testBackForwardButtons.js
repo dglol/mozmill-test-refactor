@@ -66,7 +66,7 @@ function testBackAndForward() {
   LOCAL_TEST_PAGES.forEach(function (localPage) {
     browser.openURL(localPage.url);
     var element = new widgets.Element("id", localPage.id, browser.content.activeTab);
-    assert.ok(element.exists, "element exists")
+    assert.ok(element.exists, "element exists");
   });
 
   // Click on the Back button for the number of local pages visited

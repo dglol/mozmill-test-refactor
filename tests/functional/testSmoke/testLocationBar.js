@@ -35,8 +35,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var head = require("../../lib/head");
-var services = require("../../lib/services");
+var head = require("../../../lib/head");
+var services = require("../../../lib/services");
 
 
 function setupModule(aModule) {
@@ -44,8 +44,8 @@ function setupModule(aModule) {
 }
 
 
-function teardownModule(module) {
-  head.teardown(module);
+function teardownModule(aModule) {
+  head.teardown(aModule);
 }
 
 
