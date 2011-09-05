@@ -91,8 +91,3 @@ function testBackAndForward() {
     });
   }
 }
-
-/**
- * Map test functions to litmus tests
- */
-// testBackAndForward.meta = {litmusids : [8032]};

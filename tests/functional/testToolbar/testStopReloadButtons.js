@@ -78,8 +78,3 @@ function testStopAndReload()
 function teardownModule(aModule) {
   head.teardown(aModule);
 }
-
-/**
- * Map test functions to litmus tests
- */
-// testStopAndReload.meta = {litmusids : [8030]};
