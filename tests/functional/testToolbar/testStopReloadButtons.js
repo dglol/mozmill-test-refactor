@@ -51,24 +51,28 @@ function setupModule(aModule) {
 /**
  * Test the stop and reload buttons
  */
-var testStopAndReload = function()
+function testStopAndReload()
 {
   const URL = "http://www.mozilla.com/en-US/";
 
   // Go to the URL without waiting and stop before it can fully load.
   browser.openURL(URL, 0);
   browser.ui.navBar.stopButton.click();
+  driver.sleep(10000);
 
   // Even an element at the top of a page shouldn't exist when we hit the stop
   // button extremely fast. Note use of existsNow, since we don't want to wait.
   var header = new widgets.Element("id", "header", browser.content.activeTab);
-  assert.ok(!header.existsNow, "Header does not exist");
+  expect.ok(!header.exists(), "Header does not exist");
+
+  // Reset the tabs to known state
+  browser.resetTabs();
 
   // Reload, wait for it to completely load and test again
   browser.openURL(URL);
 
   var header = new widgets.Element("id", "header", browser.content.activeTab);
-  assert.ok(header.exists, "Header exists");
+  expect.ok(header.exists(), "Header exists");
 }
 
 function teardownModule(aModule) {

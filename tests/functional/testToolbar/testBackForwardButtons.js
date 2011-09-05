@@ -66,7 +66,7 @@ function testBackAndForward() {
   LOCAL_TEST_PAGES.forEach(function (localPage) {
     browser.openURL(localPage.url);
     var element = new widgets.Element("id", localPage.id, browser.content.activeTab);
-    assert.ok(element.exists, "element exists");
+    assert.ok(element.exists(), "element exists");
   });
 
   // Click on the Back button for the number of local pages visited
@@ -76,7 +76,7 @@ function testBackAndForward() {
     var element = new widgets.Element("id", LOCAL_TEST_PAGES[i].id, browser.content.activeTab);
     // Wait for node to be present -- will go away with implicit wait, replace with assert then
     driver.waitFor(function () {
-      return element.exists;
+      return element.exists();
     });
   }
 
@@ -87,7 +87,7 @@ function testBackAndForward() {
     var element = new widgets.Element("id", LOCAL_TEST_PAGES[j].id, browser.content.activeTab);
     // Wait for node to be present -- will go away with implicit wait, replace with assert then
     driver.waitFor(function () {
-      return element.exists;
+      return element.exists();
     });
   }
 }

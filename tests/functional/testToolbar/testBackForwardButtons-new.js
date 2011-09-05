@@ -51,44 +51,6 @@ const PAGES = [{url: LOCAL_TEST_FOLDER + 'layout/mozilla.html', id: 'community'}
                {url: LOCAL_TEST_FOLDER + 'layout/mozilla_mission.html', id: 'mission_statement'},
                {url: LOCAL_TEST_FOLDER + 'layout/mozilla_grants.html', id: 'accessibility'}];
 
-// SETUP/TEARDOWN HELPERS
-
-function openPage(page) {
-  // Open up the test page and validate that it's the page we expect to be using
-  browser.openURL(page.url);
-  var element = new widgets.Element("id", page.id, browser.content.activeTab);
-  if (!element.exists)
-    throw new Error("Could not find element '" + page.id + "' in page '" + page.url + "'");
-}
-
-// TEST HELPERS
-
-function clickBackAndVerify(page) {
-  // Click on the back button and verify that we landed on the page we expect
-  browser.ui.navBar.backButton.click();
-
-  // This should be waitForPageLoad(), but it currently seems bugged when loading
-  // via back/forward.
-  driver.sleep(500);
-  // browser.waitForPageLoad();
-
-  var element = new widgets.Element("id", page.id, browser.content.activeTab);
-  assert.ok(element.exists, "Found '" + page.id + "'; correct page was landed on");
-}
-
-function clickForwardAndVerify(page) {
-  // Click on the forward button and verify that we landed on the page we expect
-  browser.ui.navBar.forwardButton.click();
-
-  // This should be waitForPageLoad(), but it currently seems bugged when loading
-  // via back/forward.
-  driver.sleep(500);
-  // browser.waitForPageLoad();
-
-  var element = new widgets.Element("id", page.id, browser.content.activeTab);
-  assert.ok(element.exists, "Found '" + page.id + "'; correct page was landed on");
-}
-
 // TEST
 
 function setupModule(aModule) {
@@ -117,10 +79,43 @@ function teardownModule(aModule) {
   head.teardown(aModule);
 }
 
-/**
- * Map test functions to litmus tests
- */
-// testBackAndForward.meta = {litmusids : [8032]};
+// SETUP/TEARDOWN HELPERS
+
+function openPage(page) {
+  // Open up the test page and validate that it's the page we expect to be using
+  browser.openURL(page.url);
+  var element = new widgets.Element("id", page.id, browser.content.activeTab);
+  if (!element.exists())
+    throw new Error("Could not find element '" + page.id + "' in page '" + page.url + "'");
+}
+
+// TEST HELPERS
+
+function clickBackAndVerify(page) {
+  // Click on the back button and verify that we landed on the page we expect
+  browser.ui.navBar.backButton.click();
+
+  // This should be waitForPageLoad(), but it currently seems bugged when loading
+  // via back/forward.
+  driver.sleep(500);
+  // browser.waitForPageLoad();
+
+  var element = new widgets.Element("id", page.id, browser.content.activeTab);
+  assert.ok(element.exists(), "Found '" + page.id + "'; correct page was landed on");
+}
+
+function clickForwardAndVerify(page) {
+  // Click on the forward button and verify that we landed on the page we expect
+  browser.ui.navBar.forwardButton.click();
+
+  // This should be waitForPageLoad(), but it currently seems bugged when loading
+  // via back/forward.
+  driver.sleep(500);
+  // browser.waitForPageLoad();
+
+  var element = new widgets.Element("id", page.id, browser.content.activeTab);
+  assert.ok(element.exists(), "Found '" + page.id + "'; correct page was landed on");
+}
 
 // NOTES ON CHANGES
 
