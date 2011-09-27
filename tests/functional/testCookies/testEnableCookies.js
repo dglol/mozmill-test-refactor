@@ -50,15 +50,15 @@ const PREF_COOKIE_BEHAVIOUR = "network.cookie.cookieBehavior";
 function setupModule(aModule) {
   head.setup(aModule);
   services.cookies.removeAll();
+
+  // Enable accepting cookies from sites
+  prefs.setPref('integer', PREF_COOKIE_BEHAVIOUR, 0);
 }
 
 /**
  * Tests enabling cookies from the preferences dialog
  */
 var testEnableCookies = function() {
-  // Enable accepting cookies from sites
-  prefs.setPref('integer', PREF_COOKIE_BEHAVIOUR, 0);
-
   // Go to a test page to build a cookie
   browser.openURL(LOCAL_TEST_PAGE);
   
@@ -70,14 +70,11 @@ var testEnableCookies = function() {
     name: "litmus_1", 
     path: "/cookies/"
   }));
+  
+  // XXX: We need to check that the cookie appears in the 'Cookies' dialog
 }
 
 function teardownModule(aModule) {
-  head.teardown(aModule);
   services.cookies.removeAll();
+  head.teardown(aModule);
 }
-
-/**
- * Map test functions to litmus tests
- */
-// testEnableCookies.meta = {litmusids : [8058]};

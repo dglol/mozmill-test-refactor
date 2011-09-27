@@ -50,15 +50,15 @@ const PREF_COOKIE_BEHAVIOUR = "network.cookie.cookieBehavior";
 function setupModule(aModule) {
   head.setup(aModule);
   services.cookies.removeAll();
+
+  // Disable accepting cookies from sites
+  prefs.setPref('integer', PREF_COOKIE_BEHAVIOUR, 2);
 }
 
 /**
  * Tests disabling cookies
  */
 function testDisableCookies() {
-  // Disable accepting cookies from sites
-  prefs.setPref('integer', PREF_COOKIE_BEHAVIOUR, 2);
-
   // Go to a test page to build a cookie
   browser.openURL(LOCAL_TEST_PAGE);
 
@@ -68,12 +68,7 @@ function testDisableCookies() {
 }
 
 function teardownModule(aModule) {
-  head.teardown(aModule);
   prefs.clearUserPref(PREF_COOKIE_BEHAVIOUR);
   services.cookies.removeAll();
+  head.teardown(aModule);
 }
-
-/**
- * Map test functions to litmus tests
- */
-// testDisableCookies.meta = {litmusids : [8053]};
