@@ -64,7 +64,7 @@ function testDisableCookies() {
 
   // Check no cookies have been stored for hostname
   hostname = browser.content.activeTab.defaultView.location.hostname;
-  assert.equal(services.cookies.countCookiesFromHost("localhost"), 0);
+  assert.equal(services.cookies.countCookiesFromHost(hostname), 0);
 }
 
 function teardownModule(aModule) {
