@@ -57,7 +57,7 @@ function setupModule(aModule) {
  * Test the home button
  */
 function testHomeButton() {
-  urlBarText = browser.ui.navBar.urlBarText;
+  var urlBarText = browser.ui.navBar.urlBarText;
   
   // Open the test page and store the URL bar text as our expected value
   browser.openURL(LOCAL_TEST_PAGE);
