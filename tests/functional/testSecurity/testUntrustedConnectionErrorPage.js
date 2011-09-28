@@ -57,7 +57,7 @@ function testUntrustedPageGetMeOutOfHereButton() {
   assert.notEqual(urlBarText.getText(), expectedURLBarText);
   
   // Get a reference to the Get Me Out Of Here button
-  // XXX We should add this to a UI map for the security warning page
+  // TODO We should add this to a UI map for the security warning page
   var getMeOutOfHereButton = new widgets.Button("id", "getMeOutOfHereButton", browser.content.activeTab);
   assert.ok(getMeOutOfHereButton.exists());
   
