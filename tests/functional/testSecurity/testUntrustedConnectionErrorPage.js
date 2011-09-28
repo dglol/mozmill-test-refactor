@@ -40,24 +40,24 @@ var widgets = require("../../../lib/ui/widgets");
 
 function setupModule(aModule) {
   head.setup(aModule);
+
+  // Open the home page and store the URL bar text as our expected value
+  urlBarText = browser.ui.navBar.urlBarText;
+  browser.ui.navBar.homeButton.click();
+  browser.waitForPageLoad();
+  expectedURLBarText = urlBarText.getText()
 }
 
 /**
  * Test the Get Me Out Of Here button from an Untrusted Error page
  */
 function testUntrustedPageGetMeOutOfHereButton() {
-  var urlBarText = browser.ui.navBar.urlBarText;
-
-  // Open the home page and store the URL bar text as our expected value
-  browser.ui.navBar.homeButton.click();
-  browser.waitForPageLoad();
-  expectedURLBarText = urlBarText.getText()
-
   // Go to an untrusted website and verify the URL bar text has changed
   browser.openURL("https://mozilla.org");
   assert.notEqual(urlBarText.getText(), expectedURLBarText);
   
   // Get a reference to the Get Me Out Of Here button
+  // XXX We should add this to a UI map for the security warning page
   var getMeOutOfHereButton = new widgets.Button("id", "getMeOutOfHereButton", browser.content.activeTab);
   assert.ok(getMeOutOfHereButton.exists());
   

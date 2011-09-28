@@ -55,14 +55,17 @@ var testUnknownIssuer = function() {
   assert.equal(link.node.textContent, "secure.mur.at");
 
   // Verify "Get Me Out Of Here!" button appears
+  // XXX We should add this to a UI map for the security warning page
   var getMeOutOfHereButton = new widgets.Button("id", "getMeOutOfHereButton", browser.content.activeTab);
   assert.ok(getMeOutOfHereButton.exists());
 
   // Verify "Add Exception" button appears
+  // XXX We should add this to a UI map for the security warning page
   var exceptionDialogButton = new widgets.Button("id", "exceptionDialogButton", browser.content.activeTab);
   assert.ok(exceptionDialogButton.exists());
 
   // Verify the error code is correct
+  // XXX We should add this to a UI map for the security warning page
   var errorMessage = new widgets.Element("id", "technicalContentText", browser.content.activeTab);
   assert.match(errorMessage.node.textContent, /sec_error_unknown_issuer/);
 }
