@@ -35,8 +35,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var defaults = require("../../../lib/defaults");
 var head = require("../../../lib/head");
+var prefs = require("../../../lib/prefs");
 var widgets = require("../../../lib/ui/widgets");
 
 function setupModule(aModule) {
@@ -60,7 +60,7 @@ function testUntrustedPageGetMeOutOfHereButton() {
   browser.waitForPageLoad();
   
   // Verify the loaded page is the homepage
-  assert.equal(browser.ui.navBar.urlBarText.getText(), defaults.getHomepage());
+  assert.equal(browser.ui.navBar.urlBarText.getText(), prefs.getHomepage(prefs.defaultBranch));
 }
 
 function teardownModule(aModule) {
