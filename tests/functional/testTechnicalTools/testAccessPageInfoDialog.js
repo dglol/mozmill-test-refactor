@@ -37,10 +37,21 @@
 
 // Include required modules
 var head = require("../../../lib/head");
+var pageInfo = require("../../../lib/ui/pageInfo");
+
 
 // To have all buttons active we need a web page with a RSS feed
-const LOCAL_TEST_FOLDER = collector.addHttpResource('../../../data/');
-const LOCAL_TEST_PAGE = LOCAL_TEST_FOLDER + 'rss/newsfeed.html';
+const BASE_URL = collector.addHttpResource('../../../data/');
+const TEST_PAGE = BASE_URL + 'rss/newsfeed.html';
+
+// Available categories and associated panels
+var CATEGORIES = [
+  {button: 'generalTab', panel: 'generalPanel'},
+  {button: 'mediaTab', panel: 'mediaPanel'},
+  {button: 'feedTab', panel: 'feedPanel'},
+  {button: 'permTab', panel: 'permPanel'},
+  {button: 'securityTab', panel: 'securityPanel'}
+];
 
 
 function setupModule(aModule) {
@@ -49,43 +60,37 @@ function setupModule(aModule) {
 
 
 /**
- * Test for the functionality of the main categories in the page info window
+ * Test the functionality of the main categories in the page info window
  */
-function testAccessPageInfo() {
-  browser.openURL(LOCAL_TEST_PAGE);
+function testPageInfoCategories() {
+  browser.openURL(TEST_PAGE);
 
   // Open the page info window
   browser.ui.mainMenu.click("#menu_pageInfo");
   browser.handleWindow(driver.windowFilterByType("Browser:page-info"),
                        checkPageInfoWindow);
-
-  driver.sleep(2000);
 }
 
 
 function checkPageInfoWindow(aWindow) {
-  aWindow.alert("asdf");
-//  // List of all available panes inside the page info window
-//  var panes = [
-//               {button: 'generalTab', panel: 'generalPanel'},
-//               {button: 'mediaTab', panel: 'mediaPanel'},
-//               {button: 'feedTab', panel: 'feedListbox'},
-//               {button: 'permTab', panel: 'permPanel'},
-//               {button: 'securityTab', panel: 'securityPanel'}
-//              ];
-//
-//  // Step through each of the tabs
-//  for each (var pane in panes) {
-//    var paneButton = new elementslib.ID(controller.window.document, pane.button);
-//    controller.click(paneButton);
-//
-//    // Check if the panel has been shown
-//    var node = new elementslib.ID(controller.window.document, pane.panel);
-//    controller.waitForElement(node, TIMEOUT);
-//  }
-//
-//  // Close the Page Info window by pressing Escape
-//  controller.keypress(null, 'VK_ESCAPE', {});
+  var win = new pageInfo.PageInfoWindow(aWindow);
+  var keys = win.ui.topBar.categories.keys;
+
+  assert.equal(keys.length, CATEGORIES.length, "Correct count of categories");
+
+  // Walk through each single category
+  for (var i = 0; i < keys.length; i++) {
+    var button = win.ui.topBar.categories.buttons[keys[i]];
+
+    expect.equal(button.node.id, CATEGORIES[i].button,
+                 "Radio button for category exists");
+
+    button.click();
+
+    // TODO: Needs implementation of a xul:deck class
+    expect.equal(win.ui.deck.node.selectedPanel.id, CATEGORIES[i].panel,
+                 "The target panel has been selected");
+  }
 }
 
 

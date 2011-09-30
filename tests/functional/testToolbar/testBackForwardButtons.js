@@ -40,11 +40,11 @@
 var head = require("../../../lib/head");
 var widgets = require("../../../lib/ui/widgets");
 
-const LOCAL_TEST_FOLDER = collector.addHttpResource('../../../data/');
-const LOCAL_TEST_PAGES = [
-  {url: LOCAL_TEST_FOLDER + 'layout/mozilla.html', id: 'community'},
-  {url: LOCAL_TEST_FOLDER + 'layout/mozilla_mission.html', id: 'mission_statement'},
-  {url: LOCAL_TEST_FOLDER + 'layout/mozilla_grants.html', id: 'accessibility'}
+const BASE_URL = collector.addHttpResource('../../../data/');
+const TEST_PAGES = [
+  {url: BASE_URL + 'layout/mozilla.html', id: 'community'},
+  {url: BASE_URL + 'layout/mozilla_mission.html', id: 'mission_statement'},
+  {url: BASE_URL + 'layout/mozilla_grants.html', id: 'accessibility'}
 ];
 
 
@@ -63,17 +63,17 @@ function teardownModule(module) {
  */
 function testBackAndForward() {
   // Open up the list of local pages statically assigned in the array
-  LOCAL_TEST_PAGES.forEach(function (localPage) {
+  TEST_PAGES.forEach(function (localPage) {
     browser.openURL(localPage.url);
     var element = new widgets.Element("id", localPage.id, browser.content.activeTab);
     assert.ok(element.exists(), "element exists");
   });
 
   // Click on the Back button for the number of local pages visited
-  for (var i = LOCAL_TEST_PAGES.length - 2; i >= 0; i--) {
+  for (var i = TEST_PAGES.length - 2; i >= 0; i--) {
     browser.ui.navBar.backButton.click();
 
-    var element = new widgets.Element("id", LOCAL_TEST_PAGES[i].id, browser.content.activeTab);
+    var element = new widgets.Element("id", TEST_PAGES[i].id, browser.content.activeTab);
     // Wait for node to be present -- will go away with implicit wait, replace with assert then
     driver.waitFor(function () {
       return element.exists();
@@ -81,10 +81,10 @@ function testBackAndForward() {
   }
 
   // Click on the Forward button for the number of websites visited
-  for (var j = 1; j < LOCAL_TEST_PAGES.length; j++) {
+  for (var j = 1; j < TEST_PAGES.length; j++) {
     browser.ui.navBar.forwardButton.click();
 
-    var element = new widgets.Element("id", LOCAL_TEST_PAGES[j].id, browser.content.activeTab);
+    var element = new widgets.Element("id", TEST_PAGES[j].id, browser.content.activeTab);
     // Wait for node to be present -- will go away with implicit wait, replace with assert then
     driver.waitFor(function () {
       return element.exists();

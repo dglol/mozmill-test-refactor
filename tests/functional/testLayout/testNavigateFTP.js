@@ -51,6 +51,7 @@ function setupModule(aModule) {
  * Open the FTP page on mozilla.org and navigate through a couple levels
  */
 function testNavigateFTP() {
+  driver.sleep(20000);
   var tab = browser.getContentWindow(browser.content.activeTab.defaultView);
 
   browser.openURL("ftp://ftp.mozilla.org/pub/");

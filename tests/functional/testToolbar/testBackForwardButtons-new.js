@@ -45,11 +45,10 @@
 var head = require("../../../lib/head");
 var widgets = require("../../../lib/ui/widgets");
 
-const LOCAL_TEST_FOLDER = collector.addHttpResource('../../../data/');
-
-const PAGES = [{url: LOCAL_TEST_FOLDER + 'layout/mozilla.html', id: 'community'},
-               {url: LOCAL_TEST_FOLDER + 'layout/mozilla_mission.html', id: 'mission_statement'},
-               {url: LOCAL_TEST_FOLDER + 'layout/mozilla_grants.html', id: 'accessibility'}];
+const BASE_URL = collector.addHttpResource('../../../data/');
+const PAGES = [{url: BASE_URL + 'layout/mozilla.html', id: 'community'},
+               {url: BASE_URL + 'layout/mozilla_mission.html', id: 'mission_statement'},
+               {url: BASE_URL + 'layout/mozilla_grants.html', id: 'accessibility'}];
 
 // TEST
 
@@ -122,7 +121,7 @@ function clickForwardAndVerify(page) {
 // PAGES is an array because the test is order-based, so indexes are convenient.
 // If the test was not order-based separate consts or a key/val dictionary would be
 // much more readable in the code. Also note the short constant name; the current
-// standard constant name of LOCAL_TEST_PAGES is needlessly long.
+// standard constant name of TEST_PAGES is needlessly long.
 
 // IMO we shouldn't standardize on a single data structure type used to feed the
 // test, and -definitely- not on an array. Arrays are the least readable structure
