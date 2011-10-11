@@ -74,22 +74,23 @@ function testPageInfoCategories() {
 
 function checkPageInfoWindow(aWindow) {
   var win = new pageInfo.PageInfoWindow(aWindow);
-  var keys = win.ui.topBar.categories.keys;
+  var buttons = win.ui.panelSelector.buttons;
+  var keys = Object.keys(buttons);
 
-  assert.equal(keys.length, CATEGORIES.length, "Correct count of categories");
+  assert.equal(keys.length, CATEGORIES.length, "Correct number of panes");
 
   // Walk through each single category
   for (var i = 0; i < keys.length; i++) {
-    var button = win.ui.topBar.categories.buttons[keys[i]];
+    var button = buttons[keys[i]];
 
     expect.equal(button.node.id, CATEGORIES[i].button,
-                 "Radio button for category exists");
+                 "Radio button for the panel exists");
 
     button.click();
 
     // TODO: Needs implementation of a xul:deck class
     expect.equal(win.ui.deck.node.selectedPanel.id, CATEGORIES[i].panel,
-                 "The target panel has been selected");
+                 "The correct panel has been selected");
   }
 }
 

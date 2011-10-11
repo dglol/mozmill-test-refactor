@@ -46,17 +46,17 @@ var head = require("../../../lib/head");
 var widgets = require("../../../lib/ui/widgets");
 
 const BASE_URL = collector.addHttpResource('../../../data/');
-const PAGES = [{url: BASE_URL + 'layout/mozilla.html', id: 'community'},
-               {url: BASE_URL + 'layout/mozilla_mission.html', id: 'mission_statement'},
-               {url: BASE_URL + 'layout/mozilla_grants.html', id: 'accessibility'}];
+const TEST_PAGES = [{url: BASE_URL + 'layout/mozilla.html', id: 'community'},
+                    {url: BASE_URL + 'layout/mozilla_mission.html', id: 'mission_statement'},
+                    {url: BASE_URL + 'layout/mozilla_grants.html', id: 'accessibility'}];
 
 // TEST
 
 function setupModule(aModule) {
   head.setup(aModule);
 
-  // Open all the pages in turn. This will leave us on PAGES[2].
-  PAGES.forEach(function (page) {
+  // Open all the pages in turn. This will leave us on TEST_PAGES[2].
+  TEST_PAGES.forEach(function (page) {
     openPage(page);
   });
 }
@@ -65,13 +65,13 @@ function setupModule(aModule) {
  * Test the back and forward buttons
  */
 function testBackAndForward() {
-  // Click on the Back button and verify where we land; we start on PAGES[2]
-  clickBackAndVerify(PAGES[1]);
-  clickBackAndVerify(PAGES[0]);
+  // Click on the Back button and verify where we land; we start on TEST_PAGES[2]
+  clickBackAndVerify(TEST_PAGES[1]);
+  clickBackAndVerify(TEST_PAGES[0]);
 
-  // Click on the Forward button and verify where we land; we start on PAGES[0]
-  clickForwardAndVerify(PAGES[1]);
-  clickForwardAndVerify(PAGES[2]);
+  // Click on the Forward button and verify where we land; we start on TEST_PAGES[0]
+  clickForwardAndVerify(TEST_PAGES[1]);
+  clickForwardAndVerify(TEST_PAGES[2]);
 }
 
 function teardownModule(aModule) {
@@ -118,7 +118,7 @@ function clickForwardAndVerify(page) {
 
 // NOTES ON CHANGES
 
-// PAGES is an array because the test is order-based, so indexes are convenient.
+// TEST_PAGES is an array because the test is order-based, so indexes are convenient.
 // If the test was not order-based separate consts or a key/val dictionary would be
 // much more readable in the code. Also note the short constant name; the current
 // standard constant name of TEST_PAGES is needlessly long.
@@ -144,4 +144,4 @@ function clickForwardAndVerify(page) {
 // the flow. Makes more sense to do now that we're one test to a file.
 
 // Generally speaking, I documented where you expect things to be as part of the
-// flow (e.g. this will leave us on PAGES[3]). This helps with following the test.
+// flow (e.g. this will leave us on TEST_PAGES[3]). This helps with following the test.
