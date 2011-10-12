@@ -11,17 +11,15 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Mozmill Test Code.
+ * The Original Code is MozMill Test code.
  *
  * The Initial Developer of the Original Code is Mozilla Foundation.
  * Portions created by the Initial Developer are Copyright (C) 2009
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Aakash Desai <adesai@mozilla.com>
- *   Henrik Skupin <hskupin@mozilla.com>
- *   Aaron Train <atrain@mozilla.com>
- *   Geo Mealer <gmealer@mozilla.com>
+ *   Henrik Skupin <mail@hskupin.info>
+ *   Anthony Hughes <ahughes@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,14 +35,22 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+// Include required modules
 var head = require("../../../lib/head");
-var widgets = require("../../../lib/ui/widgets");
+var pageInfo = require("../../../lib/ui/pageInfo");
 
+
+// To have all buttons active we need a web page with a RSS feed
 const BASE_URL = collector.addHttpResource('../../../data/');
-const TEST_PAGES = [
-  {url: BASE_URL + 'layout/mozilla.html', id: 'community'},
-  {url: BASE_URL + 'layout/mozilla_mission.html', id: 'mission_statement'},
-  {url: BASE_URL + 'layout/mozilla_grants.html', id: 'accessibility'}
+const TEST_PAGE = BASE_URL + 'rss/newsfeed.html';
+
+// Available categories and associated panels
+var CATEGORIES = [
+  {button: 'generalTab', panel: 'generalPanel'},
+  {button: 'mediaTab', panel: 'mediaPanel'},
+  {button: 'feedTab', panel: 'feedPanel'},
+  {button: 'permTab', panel: 'permPanel'},
+  {button: 'securityTab', panel: 'securityPanel'}
 ];
 
 
@@ -53,41 +59,42 @@ function setupModule(aModule) {
 }
 
 
-function teardownModule(module) {
-  head.teardown(module);
+/**
+ * Test the functionality of the main categories in the page info window
+ */
+function testPageInfoCategories() {
+  browser.openURL(TEST_PAGE);
+
+  // Open the page info window
+  browser.ui.mainMenu.click("#menu_pageInfo");
+  browser.handleWindow(driver.windowFilterByType("Browser:page-info"),
+                       checkPageInfoWindow);
 }
 
 
-/**
- * Test the back and forward buttons
- */
-function testBackAndForward() {
-  // Open up the list of local pages statically assigned in the array
-  TEST_PAGES.forEach(function (localPage) {
-    browser.openURL(localPage.url);
-    var element = new widgets.Element("id", localPage.id, browser.content.activeTab);
-    assert.ok(element.exists(), "element exists");
-  });
+function checkPageInfoWindow(aWindow) {
+  var win = new pageInfo.PageInfoWindow(aWindow);
+  var buttons = win.ui.panelSelector.buttons;
+  var keys = Object.keys(buttons);
 
-  // Click on the Back button for the number of local pages visited
-  for (var i = TEST_PAGES.length - 2; i >= 0; i--) {
-    browser.ui.navBar.backButton.click();
+  assert.equal(keys.length, CATEGORIES.length, "Correct number of panes");
 
-    var element = new widgets.Element("id", TEST_PAGES[i].id, browser.content.activeTab);
-    // Wait for node to be present -- will go away with implicit wait, replace with assert then
-    driver.waitFor(function () {
-      return element.exists();
-    });
+  // Walk through each single category
+  for (var i = 0; i < keys.length; i++) {
+    var button = buttons[keys[i]];
+
+    expect.equal(button.node.id, CATEGORIES[i].button,
+                 "Radio button for the panel exists");
+
+    button.click();
+
+    // TODO: Needs implementation of a xul:deck class
+    expect.equal(win.ui.deck.node.selectedPanel.id, CATEGORIES[i].panel,
+                 "The correct panel has been selected");
   }
+}
 
-  // Click on the Forward button for the number of websites visited
-  for (var j = 1; j < TEST_PAGES.length; j++) {
-    browser.ui.navBar.forwardButton.click();
 
-    var element = new widgets.Element("id", TEST_PAGES[j].id, browser.content.activeTab);
-    // Wait for node to be present -- will go away with implicit wait, replace with assert then
-    driver.waitFor(function () {
-      return element.exists();
-    });
-  }
+function teardownModule(aModule) {
+  head.teardown(aModule);
 }
